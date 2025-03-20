@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskToDo - Login</title>
+    <style>
+        body {
+            background-color: #1e1e2e;
+            color: #e5a04d;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            background: #2a2a3a;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            width: 320px;
+        }
+        .login-container h2 {
+            margin-bottom: 20px;
+            color: #ff8c42;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            background: #3a3a4a;
+            color: white;
+        }
+        button {
+            background: #ff8c42;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            width: 100%;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #e57a33;
+        }
+        .register-link {
+            margin-top: 10px;
+            display: block;
+            font-size: 14px;
+        }
+        .register-link a {
+            color: #ff8c42;
+            text-decoration: none;
+        }
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+	<div class="login-container">
+      <h2>TaskToDo - Login</h2>
+      <form th:action="@{/login}" th:object="${loginForm}" method="post">
+        <div class="input-group">
+            <input type="text" th:field="*{username}" placeholder="Username" required>
+        </div>
+        <div class="input-group">
+            <input type="password" th:field="*{password}" placeholder="Password" required>
+        </div>
+        <p th:if="${error}" style="color: red;">[[${error}]]</p>
+        <button>Accedi</button>
+        <p class="register-link">Non hai un account? <a href="#">Registrati</a></p>
+      </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskTodo - Home</title>
+    <style>
+
+        body {
+		    margin: 0;
+		    font-family: Arial, sans-serif;
+		    background-color: #181818;
+		    color: #fff;
+		    display: flex;
+		}
+
+        .sidebar {
+		    width: 250px;
+		    background-color: #252525;
+		    padding: 20px;
+		    position: fixed; /* Fissa la sidebar */
+		    top: 0;
+		    left: 0;
+		    height: 100vh; /* Occupa tutta l'altezza della finestra */
+		    overflow-y: auto; /* Se ci sono troppi elementi, permette lo scroll interno */
+		}
+        .sidebar h2 {
+            color: #ff6347;
+        }
+        .menu {
+            list-style: none;
+            padding: 0;
+        }
+        .menu li {
+            padding: 15px 0;
+            cursor: pointer;
+        }
+        .menu li:hover {
+            color: #ff6347;
+        }
+        
+        .main-content {
+		    margin-left: 290px; /* Sposta il contenuto a destra della sidebar */
+		    padding: 20px;
+		    flex-grow: 1;
+		}
+        .task {
+            background-color: #333;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .task h3 {
+            margin: 0;
+        }
+        .task button {
+            background-color: #ff6347;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .task button:hover {
+            background-color: #e5533d;
+        }
+        .add-task {
+            background-color: #ff6347;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+        .add-task:hover {
+            background-color: #e5533d;
+        }
+        /* Stili per il pop-up */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #252525;
+            padding: 20px;
+            border-radius: 5px;
+            width: 300px;
+            text-align: center;
+        }
+        .modal input, .modal textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            background-color: #333;
+            border: 1px solid #444;
+            color: white;
+        }
+        .modal button {
+            background-color: #ff6347;
+            border: none;
+            padding: 8px 15px;
+            cursor: pointer;
+            color: white;
+            margin-top: 10px;
+        }
+        .modal button:hover {
+            background-color: #e5533d;
+        }
+        .close-btn {
+            background-color: #ff0000;
+        }
+        .close-btn:hover {
+            background-color: #cc0000;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>TaskTodo</h2>
+        <ul class="menu">
+            <li>Dashboard</li>
+            <li>Le Mie Task</li>
+            <li>Completate</li>
+            <li>Impostazioni</li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <h1>Le Tue Task</h1>
+        <button class="add-task" onclick="openModal()">+ Aggiungi Task</button>
+
+        <div id="task-list">
+            <div th:each="task : ${tasks}" class="task">
+                <div>
+                    <h3 th:text="${task.title}"></h3>
+                    <p th:text="${task.description}"></p>
+                    <p><small th:text="'Scadenza: ' + ${task.dueDate}"></small></p>
+                </div>
+                <button>✔</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pop-up per aggiungere una task -->
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <h2>Aggiungi Task</h2>
+            <input type="text" id="taskTitle" placeholder="Titolo">
+            <textarea id="taskDescription" placeholder="Descrizione"></textarea>
+            <input type="date" id="taskDueDate">
+            <button onclick="addTask()">Salva Task</button>
+            <button class="close-btn" onclick="closeModal()">Annulla</button>
+        </div>
+    </div>
+
+    <script>
+        function openModal() {
+            document.getElementById("taskModal").style.display = "flex";
+        }
+
+        function closeModal() {
+            document.getElementById("taskModal").style.display = "none";
+        }
+
+        async function addTask() {
+            const title = document.getElementById("taskTitle").value;
+            const description = document.getElementById("taskDescription").value;
+            const dueDate = document.getElementById("taskDueDate").value;
+
+            const newTask = { title, description, dueDate };
+
+            // Invia al backend
+            await fetch("/api/tasks", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(newTask),
+            });
+
+            // Aggiorna la lista task
+            fetchTasks();
+            closeModal();
+        }
+
+        async function fetchTasks() {
+            const response = await fetch("/api/tasks");
+            const tasks = await response.json();
+            const taskList = document.getElementById("task-list");
+            taskList.innerHTML = "";
+
+            tasks.forEach(task => {
+                const taskDiv = document.createElement("div");
+                taskDiv.classList.add("task");
+                taskDiv.innerHTML = `
+                    <div>
+                        <h3>${task.title}</h3>
+                        <p>${task.description}</p>
+                        <p><small>Scadenza: ${task.dueDate}</small></p>
+                    </div>
+                    <button>✔</button>
+                `;
+                taskList.appendChild(taskDiv);
+            });
+        }
+
+        // Carica le task all'avvio
+        fetchTasks();
+    </script>
+
+</body>
+</html>
