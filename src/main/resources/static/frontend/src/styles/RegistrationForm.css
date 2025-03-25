@@ -1,0 +1,74 @@
+@charset "UTF-8";
+
+.registration-box {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #2b2b3d; /* Usa un colore scuro simile al login */
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+}
+
+.title {
+  color: #e6f1f1; /* Colore chiaro per il titolo */
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.field {
+  margin-bottom: 1rem;
+}
+
+.label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #e6f1f1;
+}
+
+.input {
+  width: 100%;
+  padding: 0.5rem;
+  background-color: #444; /* Un grigio scuro per il campo di input */
+  color: #fff;
+  border: 1px solid #555;
+  border-radius: 5px;
+}
+
+.button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #1e88e5; /* Un blu vibrante per il bottone */
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #1565c0;
+}
+
+.notification.is-danger {
+  background-color: #f44336; /* Colore per le notifiche di errore */
+  color: #fff;
+  text-align: center;
+  padding: 0.5rem;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+}
+
+/* Per il link di registrazione, se lo includi anche qui */
+.signup-link {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.signup-link a {
+  color: #1e88e5;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.signup-link a:hover {
+  text-decoration: underline;
+}

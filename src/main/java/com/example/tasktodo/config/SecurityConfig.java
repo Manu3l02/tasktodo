@@ -27,7 +27,7 @@ public class SecurityConfig {
 			// Permettere le richieste OPTIONS (necessarie per le preflight requests)
 			.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 			// Rende pubblici gli endpoint per il login e il check-auth
-			.requestMatchers("/api/login", "/api/check-auth").permitAll()
+			.requestMatchers("/api/signup", "/api/login", "/api/check-auth").permitAll()
 			// Tutti gli altri endpoint devono essere autenticati
 			.anyRequest().authenticated()
 			)

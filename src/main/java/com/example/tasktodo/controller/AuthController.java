@@ -28,11 +28,11 @@ public class AuthController {
         this.taskService = taskService;
     }
     
-    @GetMapping("/login")
-    public String showLoginForm(Model model) {
-        model.addAttribute("loginForm", new LoginForm());
-        return "login";
-    }
+//    @GetMapping("/login")
+//    public String showLoginForm(Model model) {
+//        model.addAttribute("loginForm", new LoginForm());
+//        return "login";
+//    }
      
     @PostMapping("/login")
     public ResponseEntity<?> processLogin(@RequestBody LoginForm loginForm, HttpSession session) {

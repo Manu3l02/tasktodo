@@ -19,12 +19,29 @@
   border-radius: 5px;
 }
 
-button {
-  background-color: #1e88e5; /* Un blu vibrante per il bottone */
+.button {
+  background-color: #1e88e5;
   color: #fff;
 }
 
 .notification.is-danger {
   background-color: #f44336; /* Colore più caldo per le notifiche di errore */
   color: #fff;
+}
+
+/* Per il link di registrazione, se lo includi anche qui */
+.signup-link {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.signup-link a {
+  color: #1e88e5; /* stesso colore del background del bottone */
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.signup-link a:hover {
+  color: #408080; /* colore hover simile al bottone */
+  text-decoration: none;
 }

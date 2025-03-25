@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import TaskList from "./components/TaskList";
 import LoginForm from "./components/LoginForm";
+import RegistrationForm from "./components/RegistrationForm";
 import "./styles/App.css";
 import { AuthProvider, useAuth } from "./components/AuthContext";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
@@ -49,6 +50,7 @@ function AppContent() {
           }
         />
         <Route path="/login" element={<LoginForm />} />
+		<Route path="/signup" element={<RegistrationForm />} />
         <Route
           path="/"
           element={

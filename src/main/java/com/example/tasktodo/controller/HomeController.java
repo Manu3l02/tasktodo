@@ -16,24 +16,24 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/")
 public class HomeController {
 
-	@GetMapping("/")
-	public String home(HttpSession session, Model model) {
-	    User user = (User) session.getAttribute("user");
-	    if (user == null) {
-	        return "redirect:/login"; // 🔒 Se non loggato, torna al login
-	    }
-	    
-	    model.addAttribute("taskForm", new TaskForm());
-	    model.addAttribute("user", user);
-	    return "home"; 
-	}
-	
-	@ResponseBody
-	@GetMapping("/hello")
-	public String hello() {
-		return "Hello World! Ciao a tutti sono il primo programma al mondo "
-				+ "(di *inserire nome* (riguardo il web più precisamente Spring Web))";
-	}
+//	@GetMapping("/")
+//	public String home(HttpSession session, Model model) {
+//	    User user = (User) session.getAttribute("user");
+//	    if (user == null) {
+//	        return "redirect:/login"; // 🔒 Se non loggato, torna al login
+//	    }
+//	    
+//	    model.addAttribute("taskForm", new TaskForm());
+//	    model.addAttribute("user", user);
+//	    return "home"; 
+//	}
+//	
+//	@ResponseBody
+//	@GetMapping("/hello")
+//	public String hello() {
+//		return "Hello World! Ciao a tutti sono il primo programma al mondo "
+//				+ "(di *inserire nome* (riguardo il web più precisamente Spring Web))";
+//	}
 
 }
 

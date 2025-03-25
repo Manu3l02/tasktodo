@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
     if (storedUser) {
       // Se l'utente è già presente nel localStorage, impostalo nello stato
       setUser(JSON.parse(storedUser)); 
-	  // Se l'utente non è nel localStorage, fai la richiesta per verificare la sessione
+	  // Fai la richiesta per verificare la sessione
 	  axios
 	    .get("http://localhost:8080/api/check-auth", { withCredentials: true })
 	    .then((res) => {
@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
 	    })
 	    .catch((err) => {
 	      setUser(null); // Se l'utente non è autenticato
-	    console.error("Utente non Autenticato (sono react)", err);
+	      console.error("Utente non Autenticato (sono react)", err);
 	    });    
 	 }
   }, []);
