@@ -2,6 +2,7 @@ package com.example.tasktodo.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,24 +23,24 @@ public class AuthController {
 
     private final UserService userService;
     private final TaskService taskService;
+    private final PasswordEncoder passwordEncoder;
     
-    public AuthController(UserService userService, TaskService taskService) {
+    public AuthController(UserService userService, 
+    					  TaskService taskService, 
+    					  PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.taskService = taskService;
+        this.passwordEncoder = passwordEncoder;
     }
-    
-//    @GetMapping("/login")
-//    public String showLoginForm(Model model) {
-//        model.addAttribute("loginForm", new LoginForm());
-//        return "login";
-//    }
      
     @PostMapping("/login")
     public ResponseEntity<?> processLogin(@RequestBody LoginForm loginForm, HttpSession session) {
         System.out.println("Tentativo di login con username: " + loginForm.getUsername());
-        User user = userService.findByUsernameAndPassword(loginForm.getUsername(), loginForm.getPassword());    
         
-        if (user != null) {
+        User user = userService.findByUsername(loginForm.getUsername());    
+        
+        // Se l'utente esiste e la password corrisponde usando BCrypt
+        if (user != null && passwordEncoder.matches(loginForm.getPassword(), user.getPassword())) {
             user.setTasks(taskService.findByUser(user)); 
             session.setAttribute("user", user);
             return ResponseEntity.ok(user);

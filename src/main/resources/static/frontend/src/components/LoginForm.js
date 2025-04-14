@@ -7,6 +7,7 @@ import "./../styles/LoginForm.css";
 const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // Stato per mostrare/nascondere la password
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -39,7 +40,7 @@ const LoginForm = () => {
         {error && <p className="notification is-danger">{error}</p>}
         <form onSubmit={handleSubmit}>
           <div className="field">
-            <label className="label">UserName</label>
+            <label className="label">Username</label>
             <div className="control">
               <input
                 className="input"
@@ -47,20 +48,34 @@ const LoginForm = () => {
                 placeholder="Username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
+                required
               />
             </div>
           </div>
 
-          <div className="field">
+          <div className="field" style={{ position: "relative" }}>
             <label className="label">Password</label>
             <div className="control">
               <input
                 className="input"
-                type="password"
+                type={showPassword ? "text" : "password"} // Toggle dinamico
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                required
               />
+              <span
+                style={{
+                  position: "absolute",
+                  right: "10px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  cursor: "pointer",
+                }}
+                onClick={() => setShowPassword((prev) => !prev)}
+              >
+                {showPassword ? "🙈" : "👀"}
+              </span>
             </div>
           </div>
 
@@ -70,8 +85,10 @@ const LoginForm = () => {
             </button>
           </div>
         </form>
-        <div className="signup-link">
-  	      <p>Non sei ancora registrato? <Link to="/signup">Registrati qui.</Link></p>
+        <div className="signup-link" style={{ marginTop: "1rem", textAlign: "center" }}>
+          <p>
+            Non sei ancora registrato? <Link to="/signup">Registrati qui.</Link>
+          </p>
         </div>
       </div>
     </div>

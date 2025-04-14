@@ -45,7 +45,7 @@ const TaskList = () => {
 
   const deleteTask = (id) => {
     axios
-      .delete(`http://localhost:8080/api/tasks/${id}`, { withCredentials: true })
+      .delete('http://localhost:8080/api/tasks/${id}', { withCredentials: true })
       .then(() => {
         setTasks(tasks.filter((t) => t.taskId !== id));
       })
