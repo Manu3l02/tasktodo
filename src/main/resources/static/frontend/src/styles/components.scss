@@ -1,0 +1,100 @@
+// _components.scss
+// Custom component styles and overrides
+body {
+  font-family: $font-family-base;
+  color: $text-color;
+  line-height: 1.5;
+}
+
+.box, .card {
+  background-color: $card-bg;
+  border-radius: $radius;
+  box-shadow: $box-shadow-default;
+  @include transition(box-shadow, transform);
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: $box-shadow-hover;
+  }
+}
+
+.button {
+  border-radius: 8px;
+  @include transition(background-color, box-shadow);
+  &.is-primary {
+    background-color: $accent-color;
+    color: #fff;
+    font-weight: 600;
+    padding: 1rem 1.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    &:hover {
+      background-color: $accent-hover;
+      box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+    }
+  }
+}
+
+// Form inputs
+.input,
+.select select,
+.textarea {
+  background-color: $card-bg;
+  border: 1px solid $accent-color;
+  border-radius: 8px;
+  @include transition(border-color, box-shadow);
+  &:focus {
+    box-shadow: 0 0 0 2px rgba(0, 184, 148, 0.2);
+    border-color: $accent-color;
+  }
+}
+
+
+.card {
+  background-color: $card-bg;
+  border-radius: $radius;
+  box-shadow: $box-shadow-default;
+  @include transition(box-shadow, transform);
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: $box-shadow-hover;
+  }
+
+  .card-header {
+    background-color: $accent-color;
+    color: white;
+    padding: $spacing-unit;
+    border-top-left-radius: $radius;
+    border-top-right-radius: $radius;
+  }
+
+  .card-content {
+    padding: $spacing-unit * 2;
+  }
+}
+
+h1 {
+  font-family: $font-family-heading;
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.05em;
+  margin-bottom: 1rem;
+  color: darken($text-color, 20%); // leggermente più scuro
+}
+
+p {
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+  margin-bottom: 1em;
+}
+
+// Esempio di spaziatura coerente
+.my-component {
+  margin-top: $spacing-unit * 2; // 16px
+  padding: $spacing-unit; // 8px
+}
+
+.profile-image-upload-container {
+  position: relative; // Required for z-index to work
+  z-index: 1;         // Ensure it's above the body::before
+}

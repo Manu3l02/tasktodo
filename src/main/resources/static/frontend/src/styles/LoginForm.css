@@ -1,47 +1,73 @@
-@charset "UTF-8";
-
-.login-box {
-  max-width: 400px;
-  margin: 50px auto;
-  padding: 20px;
-  background-color: #2b2b3d; /* Usato un colore scuro più morbido */
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+/* LoginForm.css */
+body {
+  background: linear-gradient(to right, #1e1e2f, #2a2a3d);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.title {
-  color: #e6f1f1; /* Colore chiaro per il titolo */
+.login-box {
+  background-color: #2e2e3f;
+  backdrop-filter: blur(8px);
+  color: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 0 24px rgba(0, 0, 0, 0.4);
+  max-width: 400px;
+  width: 100%;
+}
+
+.login-box .title {
+  color: #ded9e2;
+  margin-bottom: 1.5rem;
 }
 
 .input {
-  background-color: #444; /* Un grigio scuro per il campo di input */
+  background-color: #3c3c4e;
+  border: none;
   color: #fff;
-  border-radius: 5px;
 }
 
-.button {
-  background-color: #1e88e5;
-  color: #fff;
+.input::placeholder {
+  color: #aaa;
+}
+
+.input:focus {
+  border-color: #00b894;
+  box-shadow: 0 0 0 0.125em rgba(0, 184, 148, 0.25);
+}
+
+.button.is-primary {
+  background-color: #00b894;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+.button.is-primary:hover {
+  background-color: #009b7f;
+  box-shadow: 0 4px 6px rgba(0, 184, 148, 0.2);
 }
 
 .notification.is-danger {
-  background-color: #f44336; /* Colore più caldo per le notifiche di errore */
+  background-color: #a5243d;
   color: #fff;
+  border-radius: 6px;
+  margin-bottom: 1rem;
 }
 
-/* Per il link di registrazione, se lo includi anche qui */
 .signup-link {
-  margin-top: 1rem;
+  margin-top: 1.5rem;
   text-align: center;
+  color: #ccc;
 }
 
 .signup-link a {
-  color: #1e88e5; /* stesso colore del background del bottone */
-  text-decoration: none;
+  color: #00b894;
   font-weight: bold;
 }
 
 .signup-link a:hover {
-  color: #408080; /* colore hover simile al bottone */
-  text-decoration: none;
+  color: #3c5a14;
 }

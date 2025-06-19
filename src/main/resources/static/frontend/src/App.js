@@ -1,61 +1,82 @@
+// App.js
+
 import React, { useEffect, useState } from "react";
-import TaskList from "./components/TaskList";
+import Dashboard from "./components/Dashboard";
 import LoginForm from "./components/LoginForm";
+import MyTask from "./components/MyTask";
+import Settings from "./components/Settings";
 import RegistrationForm from "./components/RegistrationForm";
-import "./styles/App.css";
-import { AuthProvider, useAuth } from "./components/AuthContext";
+import "./styles/App.scss";
+import { AuthProvider, useAuth } from "./components/AuthContext"; // Corrected import
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
 import PrivateRoute from "./components/PrivateRoute";
-import axios from "axios";
+import api from "./api"; // Import the configured axios instance
 
 function AppContent() {
-  const { user, login, logout } = useAuth();
+  const { login } = useAuth();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // 🔥 Verifica se l'utente ha una sessione valida al caricamento
-    const user = localStorage.getItem("user"); // O prendi il valore dal contesto se lo usi
+    const token = localStorage.getItem("token"); // Check for token
 
-    if (user) { // Solo se l'utente è presente
-      axios.get("http://localhost:8080/api/check-auth", { withCredentials: true })
+    if (token) {
+      api.get("/check-auth")
         .then(res => {
-          // Se autenticato, aggiorna il contesto auth
-          login({ username: res.data }); // O passa l'intero oggetto user se preferisci
+          login({ 
+            username: res.data.username, 
+            userId: res.data.userId,
+            token: token
+          });
           setLoading(false);
         })
         .catch(err => {
-          // Non autenticato → lascia user null
+          console.error("Authentication check failed:", err);
+          localStorage.removeItem("token");
           setLoading(false);
         });
     } else {
-      setLoading(false); // Se non c'è un utente, non fare la richiesta
+      setLoading(false);
     }
   }, [login]);
 
 
   if (loading) {
-    return <div>Loading...</div>; // Evita flickering
+    return <div>Loading...</div>;
   }
 
   return (
-    <div className="container dark-theme">
-      <h1 className="title is-2">TASK TO-DO</h1>
+    <div className="app-container">
       <Routes>
         <Route
           path="/tasks"
           element={
             <PrivateRoute>
-              <TaskList />
+              <Dashboard />
             </PrivateRoute>
           }
         />
+        <Route
+          path="/my-tasks"
+          element={
+            <PrivateRoute>
+              <MyTask />
+            </PrivateRoute>
+          }
+        />
+		<Route
+		  path="/settings"
+		  element={
+		    <PrivateRoute>
+		      <Settings />
+		    </PrivateRoute>
+		  }
+		/>
         <Route path="/login" element={<LoginForm />} />
-		<Route path="/signup" element={<RegistrationForm />} />
+        <Route path="/signup" element={<RegistrationForm />} />
         <Route
           path="/"
-          element={
-            user ? <Navigate to="/tasks" /> : <Navigate to="/login" />
-          }
+          element={localStorage.getItem("token") ? <Navigate to="/tasks" /> : <Navigate to="/login" />}
         />
       </Routes>
     </div>
@@ -64,11 +85,13 @@ function AppContent() {
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <AppContent />
-      </Router>
-    </AuthProvider>
+	<HelmetProvider>
+      <AuthProvider>
+        <Router>
+          <AppContent />
+        </Router>
+      </AuthProvider>
+	</HelmetProvider>
   );
 }
 

@@ -1,0 +1,11 @@
+// _mixins.scss
+// Common mixins for transitions, flex helpers
+@mixin transition($properties...) {
+  transition: $properties 0.3s ease;
+}
+
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

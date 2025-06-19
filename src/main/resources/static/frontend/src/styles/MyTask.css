@@ -1,0 +1,55 @@
+/* MyTask.css */
+
+.mytask-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f7f9fc;
+}
+
+.mytask-main {
+  flex: 1;
+  padding: 2rem 3rem;
+  overflow-y: auto;
+}
+
+.mytask-header {
+  margin-bottom: 2rem;
+}
+
+.mytask-header h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.mytask-subtext {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.mytask-section {
+  margin-bottom: 3rem;
+}
+
+.section-title {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.task-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.calendar-wrapper {
+  background: white;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #0000000d;
+}
+
+.empty-msg {
+  color: #888;
+  font-style: italic;
+}

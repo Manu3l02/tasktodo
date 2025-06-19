@@ -1,74 +1,99 @@
-@charset "UTF-8";
-
-.registration-box {
-  max-width: 400px;
-  margin: 50px auto;
-  padding: 20px;
-  background-color: #2b2b3d; /* Usa un colore scuro simile al login */
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+/* RegistrationForm.css */
+body {
+  background: linear-gradient(to right, #1e1e2f, #2a2a3d);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.title {
-  color: #e6f1f1; /* Colore chiaro per il titolo */
+.registration-container {
+  width: 100%;
+  padding: 2rem 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.registration-box {
+  background-color: #2e2e3f;
+  backdrop-filter: blur(8px);
+  color: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 0 24px rgba(0, 0, 0, 0.4);
+  max-width: 400px;
+  width: 100%;
+}
+
+.registration-box .title {
+  color: #ded9e2;
   text-align: center;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .field {
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
 }
 
 .label {
-  display: block;
-  margin-bottom: 0.5rem;
   color: #e6f1f1;
+  margin-bottom: 0.4rem;
+  display: block;
 }
 
 .input {
-  width: 100%;
-  padding: 0.5rem;
-  background-color: #444; /* Un grigio scuro per il campo di input */
+  background-color: #3c3c4e;
+  border: none;
   color: #fff;
-  border: 1px solid #555;
-  border-radius: 5px;
+  padding: 0.6rem;
+  border-radius: 6px;
+  width: 100%;
 }
 
-.button {
+.input::placeholder {
+  color: #aaa;
+}
+
+.input:focus {
+  border: 1px solid #00b894;
+  box-shadow: 0 0 0 0.125em rgba(0, 184, 148, 0.25);
+}
+
+.button.is-primary {
+  background-color: #00b894;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
   width: 100%;
   padding: 0.75rem;
-  background-color: #1e88e5; /* Un blu vibrante per il bottone */
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+  margin-top: 1rem;
 }
 
-.button:hover {
-  background-color: #1565c0;
+.button.is-primary:hover {
+  background-color: #009b7f;
+  box-shadow: 0 4px 6px rgba(0, 184, 148, 0.2);
 }
 
 .notification.is-danger {
-  background-color: #f44336; /* Colore per le notifiche di errore */
+  background-color: #a5243d;
   color: #fff;
-  text-align: center;
-  padding: 0.5rem;
-  border-radius: 5px;
+  border-radius: 6px;
   margin-bottom: 1rem;
+  text-align: center;
+  padding: 0.75rem;
 }
 
-/* Per il link di registrazione, se lo includi anche qui */
 .signup-link {
-  margin-top: 1rem;
+  margin-top: 1.25rem;
   text-align: center;
+  color: #ccc;
 }
 
 .signup-link a {
-  color: #1e88e5;
-  text-decoration: none;
+  color: #00b894;
   font-weight: bold;
 }
 
 .signup-link a:hover {
-  text-decoration: underline;
+  color: #3c5a14;
 }

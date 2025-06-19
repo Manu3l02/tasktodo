@@ -1,0 +1,40 @@
+.settings-layout {
+  display: flex;
+}
+
+.settings-content {
+  margin-left: 240px; /* spazio per la sidebar */
+  padding: 2rem;
+  width: 100%;
+}
+
+.upload-wrapper {
+  max-width: 400px;
+}
+
+.upload-dropzone {
+  border: 2px dashed #85FFC7;
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: center;
+  cursor: pointer;
+  background-color: rgba(132, 169, 192, 0.08);
+  transition: background 0.3s ease;
+  position: relative;
+}
+
+.upload-dropzone.dragging {
+  background-color: rgba(132, 169, 192, 0.2);
+}
+
+.upload-icon {
+  font-size: 3rem;
+  color: #517890;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.upload-text {
+  font-weight: bold;
+  color: #517890;
+}

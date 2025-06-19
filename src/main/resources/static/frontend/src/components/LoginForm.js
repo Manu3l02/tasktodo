@@ -1,47 +1,65 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import api from "../api";
 import { useAuth } from "./AuthContext";
-import "./../styles/LoginForm.css";
+import { Helmet } from "react-helmet-async";
+import "./../styles/AuthForm.css";
+import logo from "../images/logotodolist.png";
+import LoginBot from "./LoginBot"; // ✅ nuovo componente
+import "../styles/LoginBot.css"; // ✅ nuovo stile
 
 const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // Stato per mostrare/nascondere la password
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
+  
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
 
-    axios
-      .post(
-        "http://localhost:8080/api/login",
-        { username, password },
-        { withCredentials: true }
-      )
-      .then((response) => {
-        if (response.data) {
-          login(response.data); // Usa il metodo login del context!
-          navigate("/tasks");
-        }
-      })
-      .catch((err) => {
-        setError("Credenziali errate. Riprova.");
-        console.error("Errore nel login", err);
-      });
+    try {
+      const res = await api.post("/login", { username, password });
+      login(res.data);
+      navigate("/tasks");
+    } catch (err) {
+      console.error("Errore nel login:", err);
+      setError("Credenziali errate. Riprova.");
+    }
   };
 
   return (
-    <div className="container">
-      <div className="box login-box">
-        <h2 className="title is-4 has-text-centered">Login</h2>
-        {error && <p className="notification is-danger">{error}</p>}
-        <form onSubmit={handleSubmit}>
-          <div className="field">
-            <label className="label">Username</label>
-            <div className="control">
+    <>
+      <Helmet>
+        <title>Login - ToDoList App</title>
+      </Helmet>
+
+      <div className="auth-container">
+        <div className="login-bot-container">
+          <LoginBot isPasswordActive={password.length > 0} />
+        </div>
+
+        <img
+          src={logo}
+          alt="Logo ToDoList"
+          className="login-logo"
+        />
+
+        <div className="auth-box">
+          <h2 className="title is-4">Login</h2>
+          {error && <p className="notification is-danger">{error}</p>}
+          <form onSubmit={handleSubmit}>
+            <div className="field">
+              <label className="label">Username</label>
               <input
                 className="input"
                 type="text"
@@ -51,14 +69,12 @@ const LoginForm = () => {
                 required
               />
             </div>
-          </div>
 
-          <div className="field" style={{ position: "relative" }}>
-            <label className="label">Password</label>
-            <div className="control">
+            <div className="field" style={{ position: "relative" }}>
+              <label className="label">Password</label>
               <input
                 className="input"
-                type={showPassword ? "text" : "password"} // Toggle dinamico
+                type={showPassword ? "text" : "password"}
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -68,30 +84,29 @@ const LoginForm = () => {
                 style={{
                   position: "absolute",
                   right: "10px",
-                  top: "50%",
-                  transform: "translateY(-50%)",
+                  top: "58%",
                   cursor: "pointer",
+                  color: "#ccc",
                 }}
-                onClick={() => setShowPassword((prev) => !prev)}
+                onClick={() => setShowPassword(prev => !prev)}
               >
-                {showPassword ? "🙈" : "👀"}
+                {showPassword ? "👁️" : "🔒"}
               </span>
             </div>
-          </div>
 
-          <div className="control">
-            <button className="button is-primary is-fullwidth" type="submit">
+            <button className="button is-primary" type="submit">
               Accedi
             </button>
+          </form>
+
+          <div className="auth-link">
+            <p>
+              Non sei ancora registrato? <Link to="/signup">Registrati qui.</Link>
+            </p>
           </div>
-        </form>
-        <div className="signup-link" style={{ marginTop: "1rem", textAlign: "center" }}>
-          <p>
-            Non sei ancora registrato? <Link to="/signup">Registrati qui.</Link>
-          </p>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

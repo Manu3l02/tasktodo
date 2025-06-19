@@ -1,78 +1,79 @@
 package com.example.tasktodo.controller;
 
+import com.example.tasktodo.dto.TaskForm;
+import com.example.tasktodo.dto.CalendarItemDTO;
+import com.example.tasktodo.service.CalendarService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.example.tasktodo.model.Task;
-import com.example.tasktodo.model.User;
-import com.example.tasktodo.service.TaskService;
-
-import jakarta.servlet.http.HttpSession;
-
 @RestController
-@RequestMapping("/api/tasks")
-//@CrossOrigin(origins = "http://localhost:3000", 
-//	methods = {
-//			RequestMethod.GET, 
-//			RequestMethod.POST, 
-//			RequestMethod.DELETE, 
-//			RequestMethod.PUT, 
-//			RequestMethod.OPTIONS},
-//	allowCredentials = "true")// 🔥 Permetti i cookie
+@RequestMapping("/api/calendar/tasks")
+@CrossOrigin(origins = {"http://localhost:3000", "https://localhost:3000"}, 
+			 allowCredentials = "true")
 public class TaskController {
-	
-	@Autowired
-	private TaskService taskService;
 
-    // Rispondi esplicitamente alla richiesta OPTIONS
-    @RequestMapping(value = "/**", method = RequestMethod.OPTIONS)
-    public ResponseEntity<Void> handleOptions() {
-        return ResponseEntity.ok().build();
+    private final CalendarService calendarService;
+
+    public TaskController(CalendarService calendarService) {
+        this.calendarService = calendarService;
     }
-	
+
     @GetMapping
-    public List<Task> getTasks(HttpSession session) {
-    	User user = (User) session.getAttribute("user");
-    	if(user == null) {
-    		throw new RuntimeException("Utente non autenticato");
-    	}
-        return taskService.findByUser(user); // Prendi le task dell'utente loggato;
+    public List<CalendarItemDTO> getTasks(@AuthenticationPrincipal UserDetails userDetails) {
+        return calendarService.findAll(userDetails).stream()
+            .filter(i -> "TASK".equals(i.getType()))
+            .toList();
     }
 
     @PostMapping
-    public Task addTask(@RequestBody Task task, HttpSession session) {
-    	User user = (User) session.getAttribute("user");
-    	if (user == null) {
-    		throw new RuntimeException("Utente non autenticato");
-    	}
-    	task.setUser(user);
-        return taskService.saveTask(task);
+    public ResponseEntity<CalendarItemDTO> addTask(
+            @RequestBody TaskForm form,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        CalendarItemDTO dto = calendarService.createTask(form, userDetails);
+        return ResponseEntity.status(201).body(dto);
     }
-	
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CalendarItemDTO> updateTask(
+            @PathVariable Long id,
+            @RequestBody TaskForm form,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        CalendarItemDTO dto = calendarService.updateTask(id, form, userDetails);
+        return ResponseEntity.ok(dto);
+    }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteTask(@PathVariable Long id, HttpSession session) {
-    	User user = (User) session.getAttribute("user");
-    	if(user == null) {
-    		throw new RuntimeException("Utente non autenticato");
-    	}
-        boolean deleted = taskService.deleteTaskById(id);
-        
-        if (deleted) {
-            return ResponseEntity.ok("Task eliminata con successo");
-        } else {
-            return ResponseEntity.status(404).body("Task non trovata");
-        }
+    public ResponseEntity<Void> deleteTask(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        calendarService.deleteTask(id, userDetails);
+        return ResponseEntity.noContent().build();
     }
-	
+
+    @PatchMapping("/{id}/complete")
+    public ResponseEntity<CalendarItemDTO> completeTask(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        CalendarItemDTO dto = calendarService.completeTask(id, userDetails);
+        return ResponseEntity.ok(dto);
+    }
+
+    @PatchMapping("/{id}/reminder-sent")
+    public ResponseEntity<Void> markReminderSent(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        calendarService.markReminderSent(id, userDetails);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/server-time")
+    public ResponseEntity<String> getServerTime() {
+        return ResponseEntity.ok(LocalDateTime.now().toString());
+    }
 }

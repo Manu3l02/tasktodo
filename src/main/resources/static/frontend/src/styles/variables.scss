@@ -1,0 +1,57 @@
+// _variables.scss
+
+:root {
+  --primary: #00B894;       // Verde acqua – azione primaria
+  --dark: #11270B;          // Verde molto scuro – testo forte, icone
+  --olive: #3C5A14;         // Verde oliva – hover, elementi attivi
+  --light: #EFF3E2;         // Beige chiarissimo – sfondo principale
+  --neutral: #DED9E2;       // Lavanda/grigio chiaro – bordi, sfondi soft
+
+  // Testo & sfondo
+  --text-color: var(--dark);
+  --bg-color: linear-gradient(to bottom right, #EFF3E2, #D6E1B7, #CEDBA9);
+
+  // Accent per elementi interattivi
+  --accent-color: var(--primary);
+  --accent-hover: var(--olive);
+}
+
+
+.input,
+.textarea,
+.select select {
+  background-color: #fff;
+  color: var(--dark);
+  border: 1px solid #DED9E2;
+  border-radius: 6px;
+
+  &:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(0,184,148, 0.3);
+  }
+}
+
+
+// Define your palette, spacings, typography, shadows
+$accent-color: #00B894;
+$accent-hover: #009B7F;
+$accent-light: lighten($accent-color, 20%);
+$bg-gradient-start: #F7F4EA;
+$bg-gradient-end: #DED9E2;
+$text-color: #11270B;
+$card-bg: #FFFFFF;
+$sidebar-bg: #E0E0E0;
+$hover-bg: #DED9E2;
+
+$radius: 12px;
+$spacing-unit: 8px;
+
+$box-shadow-default: 0 8px 10px rgba(0, 184, 148, 0.15), 0 0 0 1px rgba(0, 184, 148, 0.05);
+$box-shadow-hover:   0 12px 14px rgba(0, 184, 148, 0.3),  0 0 0 1px rgba(0, 184, 148, 0.05);
+
+$font-family-base: 'Inter', sans-serif;
+$font-family-heading: 'Playfair Display', serif;
+$font-size-base: 16px;
+$font-size-small: 14px;
+$font-size-large: 20px;
+

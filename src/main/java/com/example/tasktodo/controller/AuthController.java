@@ -1,18 +1,22 @@
 package com.example.tasktodo.controller;
 
+import java.util.Map;
+import java.util.NoSuchElementException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.example.tasktodo.dto.LoginForm;
 import com.example.tasktodo.model.User;
-import com.example.tasktodo.service.TaskService;
+import com.example.tasktodo.security.JwtUtils; // Import JwtUtils
 import com.example.tasktodo.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
@@ -21,49 +25,70 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/api")
 public class AuthController {
 
-    private final UserService userService;
-    private final TaskService taskService;
-    private final PasswordEncoder passwordEncoder;
-    
-    public AuthController(UserService userService, 
-    					  TaskService taskService, 
-    					  PasswordEncoder passwordEncoder) {
-        this.userService = userService;
-        this.taskService = taskService;
-        this.passwordEncoder = passwordEncoder;
-    }
-     
-    @PostMapping("/login")
-    public ResponseEntity<?> processLogin(@RequestBody LoginForm loginForm, HttpSession session) {
-        System.out.println("Tentativo di login con username: " + loginForm.getUsername());
-        
-        User user = userService.findByUsername(loginForm.getUsername());    
-        
-        // Se l'utente esiste e la password corrisponde usando BCrypt
-        if (user != null && passwordEncoder.matches(loginForm.getPassword(), user.getPassword())) {
-            user.setTasks(taskService.findByUser(user)); 
-            session.setAttribute("user", user);
-            return ResponseEntity.ok(user);
-        } else {
-            return ResponseEntity.status(401).body("Credenziali errate!");
-        }
-    }
-    
-    @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpSession session) {
-        // Invalidare la sessione quando si effettua il logout
-        session.invalidate();
-        return ResponseEntity.ok("Logout effettuato con successo");
-    }
-    
-    @GetMapping("/check-auth")
-    public ResponseEntity<?> checkAuth(HttpSession session) {
-        // Verifica se c'è un utente nella sessione
-        User user = (User) session.getAttribute("user");
-        if (user != null) {
-            return ResponseEntity.ok(user.getUsername()); // Ritorna il nome utente o qualsiasi altro dato che ti serve
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not authenticated");
-        }
-    }
+	private final UserService userService;
+	private final PasswordEncoder passwordEncoder;
+	private final JwtUtils jwtUtils; // Inject JwtUtils
+
+	public AuthController(UserService userService, PasswordEncoder passwordEncoder, JwtUtils jwtUtils) { // Add JwtUtils
+																											// to
+																											// constructor
+		this.userService = userService;
+		this.passwordEncoder = passwordEncoder;
+		this.jwtUtils = jwtUtils;
+	}
+
+	@PostMapping("/login")
+	public ResponseEntity<?> processLogin(
+			@RequestBody LoginForm loginForm,
+			HttpSession session) { // No HttpSession needed
+								   // if not using sessions
+		User user;
+		try {
+			user = userService.findByUsername(loginForm.getUsername().trim());
+		} catch (NoSuchElementException ex) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenziali errate!");
+		}
+
+		if (passwordEncoder.matches(loginForm.getPassword(), user.getPassword())) {
+			String jwt = jwtUtils.generateToken(user.getUsername()); // Generate the JWT
+			return ResponseEntity.ok(Map.of(
+					"token", jwt,
+					"userId", user.getUserId(),
+					"username", user.getUsername(),
+					"profileImageUrl", user.getProfileImageUrl() != null ? user.getProfileImageUrl() : "" // AGGIUNTO
+			));
+		} else {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenziali errate!");
+		}
+	}
+
+	@PostMapping("/logout")
+	public ResponseEntity<?> logout(HttpSession session) {
+		session.invalidate();
+		return ResponseEntity.ok("Logout effettuato con successo");
+	}
+
+	@GetMapping("/check-auth")
+	public ResponseEntity<?> checkAuth(@RequestHeader("Authorization") String authHeader) {
+	    if (authHeader != null && authHeader.startsWith("Bearer ")) {
+	        String token = authHeader.substring(7);
+	        try {
+	            String username = jwtUtils.getUsernameFromToken(token);
+	            User user = userService.findByUsername(username); // recupera userId e altri dati
+
+	            return ResponseEntity.ok(Map.of(
+	                "username", user.getUsername(),
+	                "userId", user.getUserId(),
+	                "profileImageUrl", user.getProfileImageUrl() != null ? user.getProfileImageUrl() : "" // AGGIUNTO QUI!
+	            ));
+	        } catch (JWTVerificationException e) {
+	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+	        } catch (NoSuchElementException e) {
+	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
+	        }
+	    } else {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No token provided");
+	    }
+	}
+
 }

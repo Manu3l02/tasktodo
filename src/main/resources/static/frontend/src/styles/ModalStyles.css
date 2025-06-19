@@ -1,0 +1,75 @@
+.custom-modal-box {
+  background-color: rgba(132, 169, 192, 0.80) !important;
+  backdrop-filter: blur(8px);
+  color: var(--text-color);
+  border-radius: 12px;
+  box-shadow: 0 0 52px rgba(133, 255, 199, 0.4);
+  padding: 1rem 1.5rem;
+  width: 100%;
+  max-width: 520px;
+  transition: all 0.3s ease;
+}
+
+/* Testata e piede coerenti */
+.custom-modal-box .modal-card-head,
+.custom-modal-box .modal-card-foot {
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0.5rem 0;
+}
+
+/* Tab toggle */
+.custom-modal-box .tabs {
+  margin-bottom: 0;
+}
+
+.custom-modal-box .tabs a {
+  color: #517890 !important;
+  font-weight: bold;
+}
+
+.custom-modal-box .tabs li.is-active a {
+  color: #85FFC7 !important;
+  border-bottom: 2px solid #85FFC7 !important;
+}
+
+/* Input e textarea */
+.custom-modal-box .input,
+.custom-modal-box .textarea {
+  background-color: #517890 !important;
+  border: none;
+  color: #D6E1B7 !important;
+  border-color: #85FFC7 !important;
+  padding: 0.6rem;
+  border-radius: 6px;
+  width: 100%;
+}
+
+.custom-modal-box .input::placeholder {
+  color: #84A9C0;
+}
+
+.custom-modal-box .input:focus,
+.custom-modal-box .textarea:focus {
+  border: 1px solid #00b894;
+  box-shadow: 0 0 0 0.125em rgba(0, 184, 148, 0.25);
+}
+
+/* Bottoni coerenti con Login */
+.custom-modal-box .button.is-primary {
+  background-color: #85FFC7 !important;
+  color: #517890 !important;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  width: 100%;
+  padding: 0.75rem;
+  margin-top: 1rem;
+}
+
+.custom-modal-box .button.is-primary:hover {
+  background-color: #517890 !important;
+  color: #85FFC7 !important;
+  box-shadow: 0 4px 6px rgba(0, 184, 148, 0.6);
+}

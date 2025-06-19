@@ -1,56 +1,52 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
-import axios from "axios";
+import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import api from "../api";
 
-export const AuthContext = createContext();
+export const AuthContext = createContext(null); // Meglio inizializzare con null o un oggetto di default
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  // Verifica se l'utente è già loggato al primo caricamento (sia da localStorage che da sessione)
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
+  // La funzione login ora accetta un oggetto user completo e lo imposta
+  const login = useCallback((userData) => {
+    localStorage.setItem("token", userData.token); // Assicurati che token sia sempre presente in userData
+    api.defaults.headers.common["Authorization"] = `Bearer ${userData.token}`;
+    setUser(userData); // <-- MODIFICA QUI: imposta l'intero oggetto userData
+    console.log("User logged in:", userData);
+  }, []); // login è stabile grazie a useCallback
 
-    if (storedUser) {
-      // Se l'utente è già presente nel localStorage, impostalo nello stato
-      setUser(JSON.parse(storedUser)); 
-	  // Fai la richiesta per verificare la sessione
-	  axios
-	    .get("http://localhost:8080/api/check-auth", { withCredentials: true })
-	    .then((res) => {
-	      setUser(res.data); // Se autenticato, salva l'utente in stato
-	      localStorage.setItem("user", JSON.stringify(res.data)); // Salva nel localStorage
-	    })
-	    .catch((err) => {
-	      setUser(null); // Se l'utente non è autenticato
-	      console.error("Utente non Autenticato (sono react)", err);
-	    });    
-	 }
+  const logout = useCallback(() => {
+    api.post("/logout")
+      .then(() => {
+        localStorage.removeItem("token");
+        delete api.defaults.headers.common["Authorization"]; // Rimuovi l'header di autorizzazione
+        setUser(null);
+        window.location.href = "/login"; // Reindirizza dopo il logout
+      })
+      .catch((err) => console.error("Errore durante il logout:", err));
   }, []);
 
-
-  const login = (userData) => {
-    localStorage.setItem("user", JSON.stringify(userData));
-    setUser(userData);
-  };
-  
-  const logout = () => {
-    // Effettua la richiesta di logout al backend
-    axios.post("http://localhost:8080/api/logout", {}, { withCredentials: true })
-      .then(() => {
-        // Rimuovi l'utente dal contesto
-        setUser(null);
-
-        // Rimuovi l'utente da localStorage
-        localStorage.removeItem("user");
-        
-        // Reimposta axios per non inviare credenziali
-        axios.defaults.withCredentials = false;
-
-        // Reindirizza alla pagina di login
-        window.location.href = "/login"; // Si può usare anche <Navigate />.
-      })
-      .catch((err) => console.log('Errore durante il logout:', err));
-  };
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      api.get("/check-auth")
+        .then((res) => {
+          // Quando check-auth risponde, assicurati che la risposta contenga tutte le info necessarie
+          login({
+            username: res.data.username,
+            userId: res.data.userId,
+            token: token, // Il token viene già gestito da localStorage
+            profileImageUrl: res.data.profileImageUrl // <-- ASSICURATI CHE check-auth LA RESTITUISCA
+          });
+        })
+        .catch((err) => {
+          console.warn("Sessione non valida o errore check-auth:", err.response?.data || err.message);
+          localStorage.removeItem("token");
+          delete api.defaults.headers.common["Authorization"]; // Rimuovi l'header di autorizzazione
+          setUser(null);
+        });
+    }
+  }, [login]); // Dipende da login, che è stabile
 
   return (
     <AuthContext.Provider value={{ user, login, logout }}>
@@ -59,4 +55,10 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth deve essere usato all\'interno di un AuthProvider');
+  }
+  return context;
+};

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import "./../styles/RegistrationForm.css"; // Crea e personalizza questo file CSS come preferisci
+import api from "../api";
+import { useNavigate, Link } from "react-router-dom";
+import "./../styles/AuthForm.css";
 
 const RegistrationForm = () => {
   const [username, setUsername] = useState("");
@@ -12,12 +13,11 @@ const RegistrationForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Invia i dati di registrazione al backend
-    axios
-      .post("http://localhost:8080/api/signup", { username, email, password })
-      .then((response) => {
-        // Dopo la registrazione, puoi reindirizzare l'utente alla pagina di login
-		console.log("Dopo il post a signup navigate login")
+    setError("");
+
+    api
+      .post("signup", { username, email, password })
+      .then(() => {
         navigate("/login");
       })
       .catch((err) => {
@@ -27,17 +27,17 @@ const RegistrationForm = () => {
   };
 
   return (
-    <div className="registration-container">
-      <div className="registration-box">
-        <h2 className="title">Registrazione</h2>
-        {error && <p className="error">{error}</p>}
+    <div className="auth-container">
+      <div className="auth-box">
+        <h2 className="title is-4">📝 Registrazione</h2>
+        {error && <p className="notification is-danger">{error}</p>}
         <form onSubmit={handleSubmit}>
           <div className="field">
             <label className="label">Username</label>
             <input
               className="input"
               type="text"
-              placeholder="Inserisci il tuo username"
+              placeholder="Username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
@@ -48,7 +48,7 @@ const RegistrationForm = () => {
             <input
               className="input"
               type="email"
-              placeholder="Inserisci la tua email"
+              placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -59,16 +59,21 @@ const RegistrationForm = () => {
             <input
               className="input"
               type="password"
-              placeholder="Inserisci la password"
+              placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
-          <button className="button" type="submit">
+          <button className="button is-primary" type="submit">
             Registrati
           </button>
         </form>
+        <div className="auth-link">
+          <p>
+            Hai già un account? <Link to="/login">Accedi qui.</Link>
+          </p>
+        </div>
       </div>
     </div>
   );

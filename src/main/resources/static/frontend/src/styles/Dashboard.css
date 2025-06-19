@@ -1,0 +1,225 @@
+/* Dashboard.css */
+
+:root {
+  --primary: #00B894;       /* azione primaria */
+  --dark: #11270B;          /* testo intenso / icone */
+  --olive: #3C5A14;         /* hover / attivi */
+  --light: #F7F4EA;         /* sfondo principale */
+  --neutral: #DED9E2;       /* bordi, sfondi soft */
+
+  --text-secondary: var(--olive);
+  --accent-color: var(--primary);
+  --accent-hover: var(--olive);
+  --card-bg: #ffffff;
+  --sidebar-bg: #517890;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 240px;
+  background-color: var(--sidebar-bg);
+  padding: 1rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+}
+
+.main-content {
+  flex-grow: 1;
+  margin-left: 240px;
+  padding: 2rem;
+  background-color: var(--bg-color);
+}
+
+.dashboard-header {
+  position: sticky;
+  top: 0;
+  background-color: rgba(214, 225, 183, 0.6);
+  padding: 1rem 1.5rem;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--neutral);
+  margin-bottom: 2rem;
+}
+
+.dashboard-header h1 {
+  color: var(--accent-color);
+  font-size: 2rem;
+}
+
+/* BOTTONI */
+.button.is-primary {
+  background-color: var(--accent-color);
+  color: #fff;
+  border: none;
+}
+
+.button.is-primary:hover {
+  background-color: var(--accent-hover);
+  color: #fff;
+}
+
+
+.list-box {
+  background-color: #517890 !important;
+  color: #85FFC7 !important;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: none;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+.light-text {
+	color: var(--light);
+}
+
+
+/* CARD / BOX / MODAL */
+.stat-card,
+.task-card,
+.task-list-section,
+.calendar-section,
+.modal-card {
+  background-color: var(--card-bg);
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  color: var(--text-color);
+}
+
+.modal-card-head,
+.modal-card-foot {
+  background-color: var(--light);
+  border-color: var(--neutral);
+}
+
+.input,
+.textarea,
+.select select {
+  border-color: var(--neutral);
+  background-color: #fff;
+  color: var(--dark);
+}
+
+.input:focus,
+.textarea:focus,
+.select select:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 0.125em rgba(0, 184, 148, 0.25);
+}
+
+/* GRAFICI / STATS */
+.stat-card {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.add-task-button {
+  background-color: var(--accent-color);
+  color: #fff;
+  border: none;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  width: 100%;
+  margin-top: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: var(--accent-hover);
+  }
+}
+
+
+/* CALENDAR VIEW background */
+.fc {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  padding: 1rem;
+}
+
+.fc-toolbar-title {
+  color: var(--dark);
+}
+
+/* Highlight eventi */
+.fc-event {
+  background-color: var(--primary);
+  border: none;
+  color: #fff;
+  font-size: 0.9rem;
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+
+
+.fc {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  border-radius: 10px;
+  padding: 1rem;
+  font-size: 0.9rem;
+}
+
+.fc-toolbar-title {
+  color: var(--accent-color);
+}
+
+.fc-daygrid-day.fc-day-today {
+  background-color: rgba(0, 184, 148, 0.1);
+}
+
+
+/* Riga uniforme per task/evento con separatore */
+.list-row {
+  border-bottom: 1px solid #e0e0e0;
+  padding: 0.75rem 0;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.2s ease;
+}
+
+
+/* Blocchi contenuto testuale */
+.list-item-text {
+  flex: 1;
+  padding-right: 1rem;
+}
+
+/* Descrizione: piccola, leggermente grigia */
+.list-item-description {
+  color: #EFF3E2;
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+}
+
+/* Pulsanti allineati al centro, visibili solo su hover */
+.list-item-buttons {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  display: flex;
+  align-items: center;
+}
+
+.list-row:hover .list-item-buttons {
+  opacity: 1;
+}
+
+

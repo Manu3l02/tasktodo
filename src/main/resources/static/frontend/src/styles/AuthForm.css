@@ -1,0 +1,115 @@
+/* AuthForm.css */
+.auth-container {
+  width: 100%;
+  min-height: 100vh;
+  padding: 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+
+.auth-box {
+  background-color: rgba(132, 169, 192, 0.80);
+  backdrop-filter: blur(8px); /* opzionale: effetto vetro sfocato */
+  color: var(--text-color);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: none;
+  max-width: 400px;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+.auth-box:hover {
+  /*box-shadow: 0 0 36px rgba(0, 184, 148, 0.3);*/
+  box-shadow: 0 0 52px rgba(133,255,199);
+}
+
+.auth-box .title {
+  color: #517890;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.field {
+  margin-bottom: 1.25rem;
+}
+
+.label {
+  color: #517890!important;
+  margin-bottom: 0.4rem;
+  display: block;
+}
+
+.input, .textarea {
+  background-color: #517890 !important;
+  border: none;
+  color: #D6E1B7 !important;
+  border-color: #85FFC7 !important;
+  padding: 0.6rem;
+  border-radius: 6px;
+  width: 100%;
+}
+
+.input::placeholder {
+  color: #84A9C0;
+}
+
+.input:focus {
+  border: 1px solid #00b894;
+  box-shadow: 0 0 0 0.125em rgba(0, 184, 148, 0.25);
+}
+
+.button.is-primary {
+  background-color: #85FFC7 !important;
+  color: #517890 !important;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  width: 100%;
+  padding: 0.75rem;
+  margin-top: 1rem;
+}
+
+.button.is-primary:hover {
+  background-color: #517890 !important;
+  color: #85FFC7 !important;
+  box-shadow: 0 4px 6px rgba(0, 184, 148, 0.6);
+}
+
+.notification.is-danger {
+  background-color: #a5243d;
+  color: #fff;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  text-align: center;
+  padding: 0.75rem;
+}
+
+.auth-link {
+  margin-top: 1.25rem;
+  text-align: center;
+  color: #517890;
+}
+
+.auth-link a {
+  color: #EFF3E2;
+  font-weight: bold;
+}
+
+.auth-link a:hover {
+  color: #CEDBA9;
+}
+
+.login-logo {
+  margin-top: -10rem;
+  max-width: 80px;
+  height: auto;
+  margin-bottom: 1.5rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  animation: fadeIn 0.6s ease-in-out;
+}
+
