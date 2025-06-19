@@ -1,33 +1,44 @@
-HELP.md
-target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+# ===== JAVA / MAVEN / SPRING BOOT =====
+/target/
+*.class
+*.log
+*.jar
+*.war
+*.ear
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
+# ===== IDE / ECLIPSE =====
+.settings/
 .project
-.settings
-.springBeans
-.sts4-cache
+.classpath
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
+# ===== SYSTEM FILES =====
+.DS_Store
+Thumbs.db
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
+# ===== CERTIFICATI E CHIAVI (OpenSSL) =====
+*.key
+*.crt
+*.pem
+*.p12
+*.csr
+*.srl
+*.der
+*.jks
+*.keystore
+localhost*
+certs/
+ssl/
+openssl/
 
-### VS Code ###
+# ===== FRONTEND: React (CRA) =====
+**/node_modules/
+**/build/
+**/.env*
+**/.cache/
+**/coverage/
+**/dist/
+
+# ===== VSCode / altri editor =====
 .vscode/
+.idea/
+*.swp
