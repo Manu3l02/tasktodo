@@ -46,7 +46,7 @@ Una semplice applicazione web **To-Do List** sviluppata con **Java/Spring Boot**
 
 4. Accesso all’applicazione
    - Frontend: [http://localhost:3000](http://localhost:3000)
-   - Backend API: [http://localhost:8080](http://localhost:8443)
+   - Backend API: [http://localhost:8443](http://localhost:8443)
 
 > **Nota**: React comunica con il backend attraverso chiamate HTTP REST su porta 8443. Assicurati che il proxy nel `package.json` punti a `http://localhost:8443`.
 
