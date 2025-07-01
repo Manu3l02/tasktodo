@@ -1,7 +1,6 @@
 /* Dashboard.css */
 
 :root {
-  --primary: #00B894;       /* azione primaria */
   --dark: #11270B;          /* testo intenso / icone */
   --olive: #3C5A14;         /* hover / attivi */
   --light: #F7F4EA;         /* sfondo principale */
@@ -10,8 +9,11 @@
   --text-secondary: var(--olive);
   --accent-color: var(--primary);
   --accent-hover: var(--olive);
-  --card-bg: #ffffff;
+  --card-bg: #517890;
   --sidebar-bg: #517890;
+  --title-color: #85FFC7;
+  --subtitle-color: #EFF3E2;
+  
 }
 
 body {
@@ -45,7 +47,7 @@ body {
 .dashboard-header {
   position: sticky;
   top: 0;
-  background-color: rgba(214, 225, 183, 0.6);
+  background-color: rgba(81, 120, 144, 0.8);
   padding: 1rem 1.5rem;
   z-index: 10;
   display: flex;
@@ -58,6 +60,14 @@ body {
 .dashboard-header h1 {
   color: var(--accent-color);
   font-size: 2rem;
+}
+
+.title {
+	color: var(--title-color) !important;
+}
+
+.subtitle {
+	color: var(--subtitle-color) !important;
 }
 
 /* BOTTONI */
@@ -93,7 +103,7 @@ body {
 .task-card,
 .task-list-section,
 .calendar-section,
-.modal-card {
+.modal-card-custom {
   background-color: var(--card-bg);
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.05);
@@ -147,46 +157,6 @@ body {
 }
 
 
-/* CALENDAR VIEW background */
-.fc {
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  padding: 1rem;
-}
-
-.fc-toolbar-title {
-  color: var(--dark);
-}
-
-/* Highlight eventi */
-.fc-event {
-  background-color: var(--primary);
-  border: none;
-  color: #fff;
-  font-size: 0.9rem;
-  border-radius: 4px;
-  padding: 2px 6px;
-}
-
-
-.fc {
-  background-color: var(--card-bg);
-  color: var(--text-color);
-  border-radius: 10px;
-  padding: 1rem;
-  font-size: 0.9rem;
-}
-
-.fc-toolbar-title {
-  color: var(--accent-color);
-}
-
-.fc-daygrid-day.fc-day-today {
-  background-color: rgba(0, 184, 148, 0.1);
-}
-
-
 /* Riga uniforme per task/evento con separatore */
 .list-row {
   border-bottom: 1px solid #e0e0e0;
@@ -195,7 +165,6 @@ body {
   align-items: center;
   transition: background-color 0.2s ease;
 }
-
 
 /* Blocchi contenuto testuale */
 .list-item-text {
@@ -221,5 +190,3 @@ body {
 .list-row:hover .list-item-buttons {
   opacity: 1;
 }
-
-

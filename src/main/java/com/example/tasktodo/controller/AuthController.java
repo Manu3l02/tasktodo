@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.example.tasktodo.dto.LoginForm;
 import com.example.tasktodo.model.User;
-import com.example.tasktodo.security.JwtUtils; // Import JwtUtils
+import com.example.tasktodo.security.JwtUtils;
 import com.example.tasktodo.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
@@ -29,9 +29,7 @@ public class AuthController {
 	private final PasswordEncoder passwordEncoder;
 	private final JwtUtils jwtUtils; // Inject JwtUtils
 
-	public AuthController(UserService userService, PasswordEncoder passwordEncoder, JwtUtils jwtUtils) { // Add JwtUtils
-																											// to
-																											// constructor
+	public AuthController(UserService userService, PasswordEncoder passwordEncoder, JwtUtils jwtUtils) {
 		this.userService = userService;
 		this.passwordEncoder = passwordEncoder;
 		this.jwtUtils = jwtUtils;
@@ -40,8 +38,8 @@ public class AuthController {
 	@PostMapping("/login")
 	public ResponseEntity<?> processLogin(
 			@RequestBody LoginForm loginForm,
-			HttpSession session) { // No HttpSession needed
-								   // if not using sessions
+			HttpSession session) { 
+
 		User user;
 		try {
 			user = userService.findByUsername(loginForm.getUsername().trim());
@@ -55,7 +53,7 @@ public class AuthController {
 					"token", jwt,
 					"userId", user.getUserId(),
 					"username", user.getUsername(),
-					"profileImageUrl", user.getProfileImageUrl() != null ? user.getProfileImageUrl() : "" // AGGIUNTO
+					"profileImageUrl", user.getProfileImageUrl() != null ? user.getProfileImageUrl() : ""
 			));
 		} else {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenziali errate!");
@@ -74,7 +72,7 @@ public class AuthController {
 	        String token = authHeader.substring(7);
 	        try {
 	            String username = jwtUtils.getUsernameFromToken(token);
-	            User user = userService.findByUsername(username); // recupera userId e altri dati
+	            User user = userService.findByUsername(username); // recupera userId e altri dati... anche se è da camiare con mail o un'altra cosa univoca
 
 	            return ResponseEntity.ok(Map.of(
 	                "username", user.getUsername(),

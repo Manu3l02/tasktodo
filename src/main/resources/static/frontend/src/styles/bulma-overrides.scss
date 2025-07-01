@@ -19,12 +19,6 @@ $enable-rounded: true !default;
   }
 }
 
-.modal-card {
-  background-color: rgba(132, 169, 192, 0.80) !important;
-  border-radius: 10px;
-  color: var(--text-color);
-}
-
 .modal-card-head,
 .modal-card-foot {
   background-color: var(--light);

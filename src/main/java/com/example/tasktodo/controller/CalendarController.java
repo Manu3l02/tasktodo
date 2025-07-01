@@ -24,7 +24,7 @@ public class CalendarController {
         this.calendarService = calendarService;
     }
 
-    /** Restituisce tutti i items (Task + Event) per l’utente */
+    /** Restituisce tutti gli items (Task + Event) per l’utente */
     @GetMapping("/items")
     public List<CalendarItemDTO> getAll(@AuthenticationPrincipal UserDetails userDetails) {
         return calendarService.findAll(userDetails);

@@ -5,8 +5,6 @@ import { useAuth } from "./AuthContext";
 import { Helmet } from "react-helmet-async";
 import "./../styles/AuthForm.css";
 import logo from "../images/logotodolist.png";
-import LoginBot from "./LoginBot"; // ✅ nuovo componente
-import "../styles/LoginBot.css"; // ✅ nuovo stile
 
 const LoginForm = () => {
   const [username, setUsername] = useState("");
@@ -44,10 +42,6 @@ const LoginForm = () => {
       </Helmet>
 
       <div className="auth-container">
-        <div className="login-bot-container">
-          <LoginBot isPasswordActive={password.length > 0} />
-        </div>
-
         <img
           src={logo}
           alt="Logo ToDoList"

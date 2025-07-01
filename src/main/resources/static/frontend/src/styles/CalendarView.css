@@ -1,95 +1,136 @@
 /* CalendarView.css */
 .calendar-container {
-  height: 600px;        /* fisso */
-  overflow-y: auto;     /* scroll verticale */
+  position: relative;
+  height: 600px;
+  overflow-y: auto;
   background-color: var(--card-bg);
   border-radius: 12px;
   padding: 1rem;
   margin-top: 2rem;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.rbc-calendar {
-  background-color: var(--bg-color);
+/* Etichette orarie */
+.calendar-container .fc .fc-timegrid-slot-label {
+  font-weight: 500;
+  font-size: 0.95rem;
   color: var(--text-color);
 }
 
-.rbc-toolbar {
-  background-color: var(--card-bg);
-  color: var(--text-color);
+/* Altezza slot */
+.calendar-container .fc-timegrid-slot {
+  height: 4em !important;
+}
+
+/* Eventi */
+.calendar-container .fc-event {
+  background-color: var(--accent-color);
+  color: white;
+  border-radius: 4px;
+  padding: 2px 4px;
+  font-size: 0.85rem;
+  border: none;
+}
+
+/* Evidenzia ora attuale */
+.calendar-container .fc-timegrid-now-indicator-line {
+  border-top: 2px solid red;
+}
+
+/* Oggi */
+.calendar-container .fc-day-today {
+  background-color: rgba(124, 58, 237, 0.1);
+}
+
+/* Header giorni */
+.calendar-container .fc-col-header-cell {
+  background-color: var(--accent-color);
+  color: white;
   padding: 0.5rem;
-  border-radius: 8px 8px 0 0;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  font-weight: 600;
+  border: none;
 }
 
-.rbc-toolbar .rbc-btn-group {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-}
-
-.rbc-toolbar .rbc-btn-group:first-child {
-  margin-bottom: 0.5rem;
-}
-
-.rbc-toolbar .rbc-label {
-  width: 100%;
-  text-align: center;
-  margin-bottom: 0.5rem;
-}
-
-.rbc-toolbar button {
-  color: var(--text-color);
+/* Pulsanti */
+.calendar-container .fc .fc-button {
   background-color: var(--accent-color);
   border: none;
   border-radius: 4px;
-  padding: 0.2rem 0.5rem;
-  font-size: 12px;
-  margin-right: 0.2rem;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.85rem;
+  color: var(--light);
 }
 
-.rbc-toolbar button:hover, .rbc-toolbar button:active, .rbc-toolbar button.rbc-active {
-  background-color: var(--accent-hover);
+.calendar-container .fc .fc-button:hover,
+.calendar-container .fc .fc-button:active,
+.calendar-container .fc .fc-button-primary:not(:disabled).fc-button-active {
+  background-color: var(--light);
+  color: var(--accent-color);
+  font-weight: bold;
 }
 
-.rbc-header {
-  background-color: var(--accent-color);
-  color: #ffffff;
-  padding: 0.5rem;
+.calendar-container .fc-toolbar-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--text-color);
 }
 
-.rbc-event {
-  background-color: var(--accent-color);
-  border-radius: 4px;
-}
-
-.rbc-today {
-  border: 3px solid #007bff;
-  background-color: rgba(124, 58, 237, 0.2);
-}
-
-.rbc-off-range-bg {
-  background-color: rgba(21, 19, 35, 0.5);
-}
-
-.rbc-day-bg + .rbc-day-bg {
+.calendar-container .fc .fc-scrollgrid-section-body td {
   border-color: rgba(255, 255, 255, 0.1);
 }
 
-.calendar-view {
-  background-color: var(--card-bg);
-  border-radius: 12px;
+/* AGGIUNTE GENERALI */
+.fc-col-header-cell-cushion {
+  color: var(--subtitle-color) !important;
+}
+
+.fc {
+  color: var(--text-color);
   padding: 1rem;
-  height: 100%;
+  font-size: 0.9rem;
 }
 
-.calendar-view h2 {
-  margin-bottom: 1rem;
+/* Rendi tutti gli slot molto più compatti */
+.calendar-container .fc-timegrid-slot {
+  height: 0.5em !important;
+  line-height: 0 !important;
+  padding: 0 !important;
 }
 
-.rbc-month-view, .rbc-time-view, .rbc-agenda-view {
-  border-radius: 0 0 8px 8px;
-  overflow: hidden;
+/* Rendi visibili solo le etichette delle ore intere (09:00, 10:00, ecc.) */
+.calendar-container .fc-timegrid-slot-label {
+  font-size: 0.9rem;
+  height: 2em !important;
+  line-height: 2em !important;
+  padding-left: 4px;
+  padding-right: 4px;
+  font-weight: 500;
+}
+
+/* RIMOSSE le vecchie regole sticky per .fc-event-main-frame */
+/* e .fc-event-title.fc-sticky */
+
+/* NUOVA definizione per header sticky custom */
+.calendar-container .fc-custom-header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;      /* colonne: time sopra, title sotto */
+  align-items: flex-start;     /* allinea a sinistra */
+  background-color: var(--accent-color);
+  padding: 4px 6px;            /* un po’ di spazio interno */
+  border-bottom: 1px solid rgba(255,255,255,0.3);
+}
+
+.calendar-container .fc-custom-time {
+  font-size: 0.75rem;
+  color: white;
+  margin-bottom: 2px;          /* spazio tra time e title */
+}
+
+.calendar-container .fc-custom-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: white;
 }

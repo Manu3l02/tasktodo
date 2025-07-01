@@ -1,7 +1,7 @@
 // Dashboard.jsx
 import React, { useEffect, useState } from 'react';
 import Sidebar from './Sidebar';
-import TaskFormModal from './TaskFormModal';
+import GenericFormModal from './GenericFormModal';
 import { ToastContainer, toast } from 'react-toastify';
 import { useAuth } from './AuthContext';
 import { format, parseISO } from 'date-fns';
@@ -122,7 +122,7 @@ const Dashboard = () => {
 		  {/* TASK LIST */}
 		  <div className='column is-6'>
 		    <div className='box list-box'>
-		      <h2 className='title is-4 mb-2'>Le mie Task</h2>
+		      <h2 className='subtitle is-4 mb-2'>Le mie Task</h2>
 
 		      <div className='list has-hoverable-list-items has-overflow-ellipsis'>
 		        {tasks.length === 0 && (
@@ -168,7 +168,7 @@ const Dashboard = () => {
 		  {/* EVENT LIST */}
 		  <div className='column is-6'>
 		    <div className='box list-box'>
-		      <h2 className='title is-4 mb-2'>I miei Eventi</h2>
+		      <h2 className='subtitle is-4 mb-2'>I miei Eventi</h2>
 
 		      <div className='list has-hoverable-list-items has-overflow-ellipsis'>
 		        {events.length === 0 && (
@@ -218,15 +218,15 @@ const Dashboard = () => {
         <CalendarView items={items} onSelectRange={handleSelectRange} />
       </div>
 
-      <TaskFormModal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        onSubmit={handleSubmit}
-        initialData={editingItem}
-        initialRange={initialRange}
-        mode={selectedMode}
-        setMode={setSelectedMode} // per permettere lo switch dal modal
-      />
+	  <GenericFormModal
+	    isOpen={isModalOpen}
+	    onClose={closeModal}
+	    onSubmitTask={handleSubmit}
+	    onSubmitEvent={handleSubmit}
+	    initialTask={selectedMode === 'task' ? editingItem : null}
+	    initialEvent={selectedMode === 'event' ? editingItem : null}
+	  />
+
     </div>
 	</>
   );
