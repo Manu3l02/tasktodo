@@ -1,8 +1,6 @@
-// GenericFormModal.jsx
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import '../styles/ModalStyles.scss';
-
+import '../styles/ModalStyles.css';
 
 const GenericFormModal = ({
   isOpen,
@@ -12,10 +10,9 @@ const GenericFormModal = ({
   initialTask,
   initialEvent,
 }) => {
-  const [mode, setMode] = useState('TASK'); // or 'EVENT'
+  const [mode, setMode] = useState('TASK');
   const [formData, setFormData] = useState({});
 
-  // initialize form fields based on mode and initial data
   useEffect(() => {
     if (mode === 'TASK') {
       setFormData({
@@ -53,25 +50,38 @@ const GenericFormModal = ({
     <div className="modal is-active">
       <div className="modal-background" onClick={onClose}></div>
       <motion.div
-        className="modal-card custom-modal-box"
+        className="modal-card custom-generic-modal-box generic-modal-card-custom"
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.8, opacity: 0 }}
-        style={{ width: '520px' }}
       >
-        <header className="modal-card-head">
-          <div className="tabs is-toggle is-fullwidth">
-            <ul>
-              <li className={mode === 'TASK' ? 'is-active' : ''}>
-                <a onClick={() => setMode('TASK')}>Task</a>
-              </li>
-              <li className={mode === 'EVENT' ? 'is-active' : ''}>
-                <a onClick={() => setMode('EVENT')}>Event</a>
-              </li>
-            </ul>
+        <header className="modal-card-head modal-header-custom">
+          <p className="modal-card-title">
+            {mode === 'TASK' ? 'Nuova Task' : 'Nuovo Evento'}
+          </p>
+          <div className="field is-grouped is-grouped-centered">
+            <p className="control">
+              <button
+                type="button"
+                className={`toggle-button ${mode === 'TASK' ? 'selected' : ''}`}
+                onClick={() => setMode('TASK')}
+              >
+                Task
+              </button>
+            </p>
+            <p className="control">
+              <button
+                type="button"
+                className={`toggle-button ${mode === 'EVENT' ? 'selected' : ''}`}
+                onClick={() => setMode('EVENT')}
+              >
+                Evento
+              </button>
+            </p>
           </div>
           <button className="delete" aria-label="close" onClick={onClose}></button>
         </header>
+
         <form onSubmit={handleSubmit}>
           <section className="modal-card-body">
             <div className="field">
@@ -159,6 +169,7 @@ const GenericFormModal = ({
               </>
             )}
           </section>
+
           <footer className="modal-card-foot">
             <button className="button is-primary" type="submit">
               {mode === 'TASK' ? (initialTask ? 'Aggiorna Task' : 'Aggiungi Task') : (initialEvent ? 'Aggiorna Event' : 'Aggiungi Event')}

@@ -52,7 +52,7 @@ package com.example.tasktodo.config;
       public CorsConfigurationSource corsConfigurationSource() {
           CorsConfiguration config = new CorsConfiguration();
           // Solo il front-end in dev
-          config.setAllowedOrigins(List.of("http://localhost:3000", "https://localhost:3000"));  //  Adjust for HTTPS in production!
+          config.setAllowedOrigins(List.of("http://localhost:3000", "https://localhost:3000"));  //  Adjust for HTTPS in production!... I have added JWT so...
           config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
           config.setAllowCredentials(true);
           config.setAllowedHeaders(List.of("*"));
