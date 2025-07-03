@@ -3,6 +3,7 @@ package com.example.tasktodo.security;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import com.auth0.jwt.JWT;
@@ -34,4 +35,5 @@ public class JwtUtils {
         DecodedJWT jwt = JWT.require(algorithm()).build().verify(token);
         return jwt.getSubject();
     }
+
 }

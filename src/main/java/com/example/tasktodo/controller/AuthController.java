@@ -67,7 +67,10 @@ public class AuthController {
 	}
 
 	@GetMapping("/check-auth")
-	public ResponseEntity<?> checkAuth(@RequestHeader("Authorization") String authHeader) {
+	public ResponseEntity<?> checkAuth(@RequestHeader(name = "Authorization", required = false) String authHeader) {
+	    if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No token provided");
+	    }
 	    if (authHeader != null && authHeader.startsWith("Bearer ")) {
 	        String token = authHeader.substring(7);
 	        try {
