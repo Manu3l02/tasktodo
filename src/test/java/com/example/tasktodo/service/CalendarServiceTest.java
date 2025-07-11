@@ -51,8 +51,8 @@ public class CalendarServiceTest {
 		TaskForm form = new TaskForm();
 		form.setTitle("Test Task");
 		form.setDescription("Descrizione");
-		form.setDueDate(LocalDate.of(2025, 6, 30));
-		form.setReminderDateTime(LocalDateTime.of(2025, 6, 29, 15, 0));
+		form.setDueDateTime(LocalDateTime.of(2025, 6, 30, 19, 0));
+		form.setReminderMinutesBefore(5);
 		
 		when(taskRepo.save(any(Task.class))).thenAnswer(i -> i.getArguments()[0]);
 		
@@ -60,8 +60,8 @@ public class CalendarServiceTest {
 		
 		assertEquals("Test Task", result.getTitle());
 		assertEquals("Descrizione", result.getDescription());
-		assertEquals(LocalDate.of(2025, 6, 30), result.getDueDate());
-		assertEquals(LocalDateTime.of(2025, 6, 29, 15, 0), result.getReminderDateTime());
+		assertEquals(LocalDateTime.of(2025, 6, 30, 19, 0), result.getDueDateTime());
+		assertEquals(5, result.getReminderMinutesBefore());
 		assertFalse(result.isCompleted());
 		assertFalse(result.isReminderSent());
 		
@@ -120,7 +120,7 @@ public class CalendarServiceTest {
 	    task.setId(1L);
 	    task.setUser(user);
 	    task.setTitle("Task 1");
-	    task.setDueDate(LocalDate.of(2025, 7, 10));
+	    task.setDueDateTime(LocalDateTime.of(2025, 7, 10, 8, 0));
 	    task.setCompleted(false);
 
 	    // Creo 1 evento con startDateTime 2025-07-05

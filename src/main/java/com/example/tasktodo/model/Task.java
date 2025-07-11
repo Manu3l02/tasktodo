@@ -1,10 +1,15 @@
 package com.example.tasktodo.model;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "task")
@@ -13,15 +18,10 @@ import lombok.*;
 @NoArgsConstructor @AllArgsConstructor
 public class Task extends CalendarItem {
 
-    @Column(name = "due_date")
-    private LocalDate dueDate;
+    @Column(name = "due_date_time")
+    private LocalDateTime dueDateTime;
 
     @Column(name = "is_completed", nullable = false)
     private boolean completed = false;
 
-    @Column(name = "reminder_date_time")
-    private LocalDateTime reminderDateTime;
-
-    @Column(name = "reminder_sent", nullable = false)
-    private boolean reminderSent = false;
 }

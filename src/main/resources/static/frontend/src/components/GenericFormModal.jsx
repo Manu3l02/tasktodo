@@ -5,12 +5,13 @@ import '../styles/ModalStyles.css';
 const GenericFormModal = ({
   isOpen,
   onClose,
-  onSubmitTask,
-  onSubmitEvent,
+  onSubmit,
   initialTask,
   initialEvent,
+  initialRange,
+  selectedMode
 }) => {
-  const [mode, setMode] = useState('TASK');
+  const [mode, setMode] = useState(selectedMode || 'TASK');
   const [formData, setFormData] = useState({});
 
   useEffect(() => {
@@ -18,29 +19,59 @@ const GenericFormModal = ({
       setFormData({
         title: initialTask?.title || '',
         description: initialTask?.description || '',
-        dueDate: initialTask?.dueDate ? initialTask.dueDate.split('T')[0] : '',
-        reminderDateTime: initialTask?.reminderDateTime || '',
+        dueDateTime: initialTask?.dueDateTime?.slice(0, 16) || '',
+        reminderMinutesBefore: initialTask?.reminderMinutesBefore || '',
       });
     } else {
-      setFormData({
-        title: initialEvent?.title || '',
-        description: initialEvent?.description || '',
-        startDateTime: initialEvent?.startDateTime || '',
-        endDateTime: initialEvent?.endDateTime || '',
-      });
+      if (initialEvent) {
+        setFormData({
+          title: initialEvent.title || '',
+          description: initialEvent.description || '',
+          startDateTime: initialEvent.startDateTime?.slice(0, 16) || '',
+          endDateTime: initialEvent.endDateTime?.slice(0, 16) || '',
+          reminderMinutesBefore: initialEvent.reminderMinutesBefore || '',
+        });
+      } else if (initialRange) {
+        setFormData({
+          title: '',
+          description: '',
+          startDateTime: initialRange.startDateTime?.slice(0, 16) || '',
+          endDateTime: initialRange.endDateTime?.slice(0, 16) || '',
+          reminderMinutesBefore: '',
+        });
+      } else {
+        setFormData({
+          title: '',
+          description: '',
+          startDateTime: '',
+          endDateTime: '',
+          reminderMinutesBefore: '',
+        });
+      }
     }
-  }, [mode, initialTask, initialEvent, isOpen]);
+  }, [mode, initialTask, initialEvent, initialRange, isOpen]);
 
+  useEffect(() => {
+    if (isOpen && selectedMode) {
+      setMode(selectedMode.toUpperCase());
+    }
+  }, [selectedMode, isOpen]);
+  
   const handleChange = e => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData(prev => ({
+      ...prev,
+      [name]: value === '' ? null
+        : name === 'reminderMinutesBefore' ? parseInt(value, 10)
+        : value
+    }));
   };
 
   const handleSubmit = e => {
     e.preventDefault();
     if (!formData.title.trim()) return;
-    if (mode === 'TASK') onSubmitTask(formData);
-    else onSubmitEvent(formData);
+    console.log("Payload inviato:", formData);
+    onSubmit(formData, mode); // Manda anche il tipo
     onClose();
   };
 
@@ -118,23 +149,31 @@ const GenericFormModal = ({
                   <div className="control">
                     <input
                       className="input"
-                      type="date"
-                      name="dueDate"
-                      value={formData.dueDate}
+                      type="datetime-local"
+                      name="dueDateTime"
+                      value={formData.dueDateTime}
                       onChange={handleChange}
                     />
                   </div>
                 </div>
                 <div className="field">
-                  <label className="label">Promemoria</label>
+                  <label className="label">Promemoria (prima della scadenza)</label>
                   <div className="control">
-                    <input
-                      className="input"
-                      type="datetime-local"
-                      name="reminderDateTime"
-                      value={formData.reminderDateTime}
-                      onChange={handleChange}
-                    />
+                    <div className="select is-fullwidth">
+                      <select
+                        name="reminderMinutesBefore"
+                        value={formData.reminderMinutesBefore}
+                        onChange={handleChange}
+                        required
+                      >
+                        <option value="">Seleziona un intervallo</option>
+                        <option value="5">5 minuti prima</option>
+                        <option value="10">10 minuti prima</option>
+                        <option value="15">15 minuti prima</option>
+                        <option value="30">30 minuti prima</option>
+                        <option value="60">1 ora prima</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
               </>
@@ -166,13 +205,34 @@ const GenericFormModal = ({
                     />
                   </div>
                 </div>
+                <div className="field">
+                  <label className="label">Promemoria (prima dell’inizio)</label>
+                  <div className="control">
+                    <div className="select is-fullwidth">
+                      <select
+                        name="reminderMinutesBefore"
+                        value={formData.reminderMinutesBefore}
+                        onChange={handleChange}
+                      >
+                        <option value="">Nessun promemoria</option>
+                        <option value="5">5 minuti prima</option>
+                        <option value="10">10 minuti prima</option>
+                        <option value="15">15 minuti prima</option>
+                        <option value="30">30 minuti prima</option>
+                        <option value="60">1 ora prima</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
               </>
             )}
           </section>
 
           <footer className="modal-card-foot">
             <button className="button is-primary" type="submit">
-              {mode === 'TASK' ? (initialTask ? 'Aggiorna Task' : 'Aggiungi Task') : (initialEvent ? 'Aggiorna Event' : 'Aggiungi Event')}
+              {mode === 'TASK'
+                ? (initialTask ? 'Aggiorna Task' : 'Aggiungi Task')
+                : (initialEvent ? 'Aggiorna Event' : 'Aggiungi Event')}
             </button>
             <button className="button" type="button" onClick={onClose}>Annulla</button>
           </footer>
