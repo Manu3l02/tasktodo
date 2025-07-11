@@ -13,4 +13,5 @@ public class EventForm {
     private String description;
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
+	private Integer reminderMinutesBefore;
 }

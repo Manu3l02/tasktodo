@@ -17,4 +17,5 @@ public class Event extends CalendarItem {
 
     @Column(name = "end_date_time", nullable = false)
     private LocalDateTime endDateTime;
+
 }

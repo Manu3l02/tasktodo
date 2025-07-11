@@ -2,7 +2,10 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://localhost:8443/api", //  Use the full HTTPS URL of your backend
+  baseURL: "https://localhost:8443/api",
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
 api.interceptors.request.use(

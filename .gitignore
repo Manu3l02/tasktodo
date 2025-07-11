@@ -42,3 +42,7 @@ openssl/
 .vscode/
 .idea/
 *.swp
+src/main/resources/application.properties
+uploads/
+*.txt
+src/main/resources/application.properties

@@ -44,22 +44,23 @@ const Dashboard = () => {
     setInitialRange(null);
   };
 
-  const handleSubmit = formData => {
-    const payload = selectedMode === 'task'
+  const handleSubmit = (formData, mode) => {
+    const payload = mode === 'TASK'
       ? {
           title: formData.title,
           description: formData.description,
-          dueDate: formData.dueDate || null,
-          reminderDateTime: formData.reminderDateTime || null
+          dueDateTime: formData.dueDateTime || null,
+          reminderMinutesBefore: formData.reminderMinutesBefore || null
         }
       : {
           title: formData.title,
           description: formData.description,
           startDateTime: formData.startDateTime,
-          endDateTime: formData.endDateTime
+          endDateTime: formData.endDateTime,
+          reminderMinutesBefore: formData.reminderMinutesBefore || null
         };
 
-    const endpoint = selectedMode === 'task' ? '/calendar/tasks' : '/calendar/events';
+    const endpoint = mode === 'TASK' ? '/calendar/tasks' : '/calendar/events';
     const method = editingItem && editingItem.id ? api.put : api.post;
     const url = editingItem && editingItem.id ? `${endpoint}/${editingItem.id}` : endpoint;
 
@@ -87,7 +88,16 @@ const Dashboard = () => {
   };
 
   const handleSelectRange = info => {
-    openModal('event', null, { startDateTime: info.startStr, endDateTime: info.endStr });
+    const isAllDay = info.allDay;
+
+    openModal(
+      isAllDay ? 'task' : 'event',
+      null,
+      {
+        startDateTime: info.startStr,
+        endDateTime: info.endStr,
+      }
+    );
   };
   
   // Funzione per formattare orario
@@ -221,10 +231,11 @@ const Dashboard = () => {
 	  <GenericFormModal
 	    isOpen={isModalOpen}
 	    onClose={closeModal}
-	    onSubmitTask={handleSubmit}
-	    onSubmitEvent={handleSubmit}
+	    onSubmit={handleSubmit}
 	    initialTask={selectedMode === 'task' ? editingItem : null}
 	    initialEvent={selectedMode === 'event' ? editingItem : null}
+		initialRange={initialRange}
+		selectedMode={selectedMode}
 	  />
 
     </div>

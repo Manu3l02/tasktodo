@@ -3,6 +3,10 @@ package com.example.tasktodo.dto;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,12 +24,12 @@ public class CalendarItemDTO {
     private String title;
 
     private String description;
-
-    private LocalDate dueDate; // per Task
+    
+    private LocalDateTime dueDateTime; // per Task
 
     private boolean completed; // per Task
 
-    private LocalDateTime reminderDateTime;
+    private Integer reminderMinutesBefore;
 
     private boolean reminderSent;
 
@@ -33,5 +37,5 @@ public class CalendarItemDTO {
 
     private LocalDateTime startDateTime; // per Event
 
-    private LocalDateTime endDateTime;
+    private LocalDateTime endDateTime; // per Event
 }

@@ -1,7 +1,7 @@
 import Sidebar from './Sidebar';
 import ProfileImageUpload from './ProfileImageUpload';
 import { Helmet } from "react-helmet-async";
-import '../styles/Settings.css'; // per lo stile
+import '../styles/Settings.css';
 
 const Settings = () => {
   return (

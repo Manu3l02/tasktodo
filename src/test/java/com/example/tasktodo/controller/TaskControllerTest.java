@@ -34,7 +34,7 @@ public class TaskControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    //MockBean è stato deprecato in favore di MockitoBean...
+    //MockBean è stato deprecato in favore di MockitoBean... tanto per dire
     @MockitoBean
     private CalendarService calendarService;
 
@@ -48,16 +48,16 @@ public class TaskControllerTest {
         TaskForm form = new TaskForm();
         form.setTitle("Nuova task");
         form.setDescription("Descrizione di esempio.");
-        form.setDueDate(LocalDate.of(2025, 7, 1));
-        form.setReminderDateTime(LocalDateTime.of(2025, 6, 30, 14, 0));
+        form.setDueDateTime(LocalDateTime.of(2025, 7, 1, 14, 00));
+        form.setReminderMinutesBefore(5);
 
         CalendarItemDTO resultDto = new CalendarItemDTO();
         resultDto.setId(1L);
         resultDto.setTitle("Nuova task");
         resultDto.setDescription("Descrizione di esempio.");
         resultDto.setType("TASK");
-        resultDto.setDueDate(form.getDueDate());
-        resultDto.setReminderDateTime(form.getReminderDateTime());
+        resultDto.setDueDateTime(form.getDueDateTime());
+        resultDto.setReminderMinutesBefore(form.getReminderMinutesBefore());
 
         when(calendarService.createTask(any(TaskForm.class), any())).thenReturn(resultDto);
 
@@ -68,8 +68,8 @@ public class TaskControllerTest {
                 .andExpect(jsonPath("$.title").value("Nuova task"))
                 .andExpect(jsonPath("$.description").value("Descrizione di esempio."))
                 .andExpect(jsonPath("$.type").value("TASK"))
-                .andExpect(jsonPath("$.dueDate").value("2025-07-01"))
-                .andExpect(jsonPath("$.reminderDateTime").value("2025-06-30T14:00:00"));
+                .andExpect(jsonPath("$.dueDateTime").value("2025-07-01T14:00:00"))
+                .andExpect(jsonPath("$.reminderMinutesBefore").value("5"));
     }
     
     @Test
@@ -81,16 +81,16 @@ public class TaskControllerTest {
         task1.setTitle("Task 1");
         task1.setDescription("Descrizione 1");
         task1.setType("TASK");
-        task1.setDueDate(LocalDate.of(2025, 7, 1));
-        task1.setReminderDateTime(LocalDateTime.of(2025, 6, 30, 10, 0));
+        task1.setDueDateTime(LocalDateTime.of(2025, 7, 1, 12, 30));
+        task1.setReminderMinutesBefore(10);
 
         CalendarItemDTO task2 = new CalendarItemDTO();
         task2.setId(2L);
         task2.setTitle("Task 2");
         task2.setDescription("Descrizione 2");
         task2.setType("TASK");
-        task2.setDueDate(LocalDate.of(2025, 7, 2));
-        task2.setReminderDateTime(LocalDateTime.of(2025, 7, 1, 9, 0));
+        task2.setDueDateTime(LocalDateTime.of(2025, 7, 2, 18, 00));
+        task2.setReminderMinutesBefore(15);
 
         when(calendarService.findAll(any())).thenReturn(List.of(task1, task2));
 
