@@ -37,13 +37,17 @@ package com.example.tasktodo.config;
             .cors(Customizer.withDefaults())
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.POST, "/api/login","/api/signup").permitAll()
-                .requestMatchers("/api/check-auth").permitAll() //  Adjust as needed
-                .anyRequest().authenticated()
-             )
+                .requestMatchers(HttpMethod.POST,
+            	    "/api/login",
+            	    "/api/signup",
+            	    "/api/auth/forgot-password",
+            	    "/api/auth/reset-password"
+            	    ).permitAll()
+            	     .requestMatchers("/api/check-auth").permitAll()
+            	     .anyRequest().authenticated()
+            )
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
             .httpBasic(Customizer.withDefaults());
-          // o disable se non serve
 
           return http.build();
       }
@@ -51,7 +55,7 @@ package com.example.tasktodo.config;
       @Bean
       public CorsConfigurationSource corsConfigurationSource() {
           CorsConfiguration config = new CorsConfiguration();
-          // Solo il front-end in dev
+
           config.setAllowedOrigins(List.of("http://localhost:3000", "https://localhost:3000"));  //  Adjust for HTTPS in production!... I have added JWT so...
           config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
           config.setAllowCredentials(true);

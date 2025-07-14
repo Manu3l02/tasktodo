@@ -97,6 +97,7 @@ const LoginForm = () => {
             <p>
               Non sei ancora registrato? <Link to="/signup">Registrati qui.</Link>
             </p>
+		    <Link to="/forgot-password">Hai dimenticato la password?</Link>
           </div>
         </div>
       </div>

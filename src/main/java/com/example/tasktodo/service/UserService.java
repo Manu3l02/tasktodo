@@ -24,7 +24,8 @@ public class UserService {
 
 	
 	public User getUser() {
-		return userRepository.findByEmail("admin@example.com");
+		return userRepository.findByEmail("admin@example.com")
+				.orElseThrow(() -> new NoSuchElementException("Utente non trovato"));
 	}
 	
     public User findByUsername(String username) {

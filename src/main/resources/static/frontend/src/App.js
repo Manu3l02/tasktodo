@@ -6,6 +6,8 @@ import LoginForm from "./components/LoginForm";
 import MyTask from "./components/MyTask";
 import Settings from "./components/Settings";
 import RegistrationForm from "./components/RegistrationForm";
+import ForgotPasswordForm from "./components/ForgotPasswordForm";
+import ResetPasswordForm from "./components/ResetPasswordForm";
 import "./styles/App.scss";
 import { AuthProvider, useAuth } from "./components/AuthContext"; // Corrected import
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
@@ -78,6 +80,8 @@ function AppContent() {
           path="/"
           element={localStorage.getItem("token") ? <Navigate to="/tasks" /> : <Navigate to="/login" />}
         />
+		<Route path="/forgot-password" element={<ForgotPasswordForm />} />
+		<Route path="/reset-password" element={<ResetPasswordForm />} />
       </Routes>
     </div>
   );

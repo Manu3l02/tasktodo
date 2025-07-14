@@ -17,6 +17,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.example.tasktodo.dto.LoginForm;
 import com.example.tasktodo.model.User;
 import com.example.tasktodo.security.JwtUtils;
+import com.example.tasktodo.service.PasswordResetService;
 import com.example.tasktodo.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
@@ -28,11 +29,16 @@ public class AuthController {
 	private final UserService userService;
 	private final PasswordEncoder passwordEncoder;
 	private final JwtUtils jwtUtils; // Inject JwtUtils
+	private final PasswordResetService passwordResetService;
 
-	public AuthController(UserService userService, PasswordEncoder passwordEncoder, JwtUtils jwtUtils) {
+	public AuthController(UserService userService, 
+						  PasswordEncoder passwordEncoder, 
+						  JwtUtils jwtUtils,
+						  PasswordResetService passwordResetService) {
 		this.userService = userService;
 		this.passwordEncoder = passwordEncoder;
 		this.jwtUtils = jwtUtils;
+		this.passwordResetService = passwordResetService;
 	}
 
 	@PostMapping("/login")
@@ -91,5 +97,33 @@ public class AuthController {
 	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No token provided");
 	    }
 	}
+	
+	public record ForgotPasswordRequest(String email) {}
+	
+	@PostMapping("/auth/forgot-password")
+	public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequest req) {
+	    boolean sent = passwordResetService.sendResetLink(req.email());
+	    // Restituiamo sempre 200 per non rivelare se l’email esiste
+	    if (sent) {
+	        return ResponseEntity.ok(Map.of("message", "Se l'email è valida riceverai un link a breve"));
+	    } else {
+	        return ResponseEntity.ok(Map.of("message", "Se l'email è valida riceverai un link a breve"));
+	    }
+	}
+	
+	public record ResetPasswordRequest(String token, String newPassword) {}
 
+	@PostMapping("/auth/reset-password")
+	public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest req) {
+		return passwordResetService.validateToken(req.token())
+			    .map(user -> {
+			        String hash = passwordEncoder.encode(req.newPassword());
+			        passwordResetService.resetPassword(user, hash);
+			        return ResponseEntity.ok(Map.of("message", "Password aggiornata con successo"));
+			    })
+			    .orElseGet(() -> ResponseEntity
+			        .status(HttpStatus.BAD_REQUEST)
+			        .body(Map.of("message", "Token non valido o scaduto")));
+
+	}
 }
