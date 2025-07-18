@@ -164,7 +164,6 @@ const GenericFormModal = ({
                         name="reminderMinutesBefore"
                         value={formData.reminderMinutesBefore}
                         onChange={handleChange}
-                        required
                       >
                         <option value="">Seleziona un intervallo</option>
                         <option value="5">5 minuti prima</option>
