@@ -10,7 +10,8 @@ const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
+  const [formErrors, setFormErrors] = useState({});
+  const [submitError, setSubmitError] = useState("");
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -20,10 +21,21 @@ const LoginForm = () => {
       document.body.style.overflow = 'auto';
     };
   }, []);
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+    setSubmitError("");
+
+    const errors = {};
+    if (!username.trim()) errors.username = "Username obbligatorio";
+    if (!password) errors.password = "Password obbligatoria";
+
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    }
+
+    setFormErrors({});
 
     try {
       const res = await api.post("/login", { username, password });
@@ -31,7 +43,7 @@ const LoginForm = () => {
       navigate("/tasks");
     } catch (err) {
       console.error("Errore nel login:", err);
-      setError("Credenziali errate. Riprova.");
+      setSubmitError("Credenziali errate. Riprova.");
     }
   };
 
@@ -42,50 +54,53 @@ const LoginForm = () => {
       </Helmet>
 
       <div className="auth-container">
-        <img
-          src={logo}
-          alt="Logo ToDoList"
-          className="login-logo"
-        />
+        <img src={logo} alt="Logo ToDoList" className="login-logo" />
 
         <div className="auth-box">
           <h2 className="title is-4">Login</h2>
-          {error && <p className="notification is-danger">{error}</p>}
+          {submitError && <p className="notification is-danger">{submitError}</p>}
           <form onSubmit={handleSubmit}>
             <div className="field">
               <label className="label">Username</label>
               <input
-                className="input"
+                className={`input ${formErrors.username ? 'is-danger' : ''}`}
                 type="text"
                 placeholder="Username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                required
               />
+              <div style={{ minHeight: "1.5em" }}>
+                {formErrors.username && <p className="help is-danger">{formErrors.username}</p>}
+              </div>
             </div>
 
-            <div className="field" style={{ position: "relative" }}>
+            <div className="field">
               <label className="label">Password</label>
-              <input
-                className="input"
-                type={showPassword ? "text" : "password"}
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-              <span
-                style={{
-                  position: "absolute",
-                  right: "10px",
-                  top: "58%",
-                  cursor: "pointer",
-                  color: "#ccc",
-                }}
-                onClick={() => setShowPassword(prev => !prev)}
-              >
-                {showPassword ? "👁️" : "🔒"}
-              </span>
+              <div className="control has-icons-right" style={{ position: "relative" }}>
+                <input
+                  className={`input ${formErrors.password ? "is-danger" : ""}`}
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <span
+                  style={{
+                    position: "absolute",
+                    right: "10px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    cursor: "pointer",
+                    color: "#ccc",
+                  }}
+                  onClick={() => setShowPassword(prev => !prev)}
+                >
+                  {showPassword ? "👁️" : "🔒"}
+                </span>
+              </div>
+              <div style={{ minHeight: "1.5em" }}>
+                {formErrors.password && <p className="help is-danger">{formErrors.password}</p>}
+              </div>
             </div>
 
             <button className="button is-primary" type="submit">

@@ -9,6 +9,8 @@ import com.example.tasktodo.dto.RegistrationForm;
 import com.example.tasktodo.model.User;
 import com.example.tasktodo.service.UserService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api")
 public class RegistrationController {
@@ -20,7 +22,7 @@ public class RegistrationController {
 	}
 	
 	@PostMapping("/signup")
-	public void signup(@RequestBody RegistrationForm regForm) {
+	public void signup(@Valid @RequestBody RegistrationForm regForm) {
 		User newUser = new User();
 		
 		newUser.setUsername(regForm.getUsername());

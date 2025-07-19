@@ -3,6 +3,9 @@ package com.example.tasktodo.controller;
 import com.example.tasktodo.dto.TaskForm;
 import com.example.tasktodo.dto.CalendarItemDTO;
 import com.example.tasktodo.service.CalendarService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,7 +36,7 @@ public class TaskController {
 
     @PostMapping
     public ResponseEntity<CalendarItemDTO> addTask(
-            @RequestBody TaskForm form,
+            @Valid @RequestBody TaskForm form,
             @AuthenticationPrincipal UserDetails userDetails) {
         CalendarItemDTO dto = calendarService.createTask(form, userDetails);
         return ResponseEntity.status(201).body(dto);
@@ -42,7 +45,7 @@ public class TaskController {
     @PutMapping("/{id}")
     public ResponseEntity<CalendarItemDTO> updateTask(
             @PathVariable Long id,
-            @RequestBody TaskForm form,
+            @Valid @RequestBody TaskForm form,
             @AuthenticationPrincipal UserDetails userDetails) {
         CalendarItemDTO dto = calendarService.updateTask(id, form, userDetails);
         return ResponseEntity.ok(dto);

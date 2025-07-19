@@ -20,6 +20,7 @@ import com.example.tasktodo.security.JwtUtils;
 import com.example.tasktodo.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api")
@@ -37,7 +38,7 @@ public class AuthController {
 
 	@PostMapping("/login")
 	public ResponseEntity<?> processLogin(
-			@RequestBody LoginForm loginForm,
+			@Valid @RequestBody LoginForm loginForm,
 			HttpSession session) { 
 
 		User user;

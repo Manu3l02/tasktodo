@@ -12,43 +12,48 @@ const GenericFormModal = ({
   selectedMode
 }) => {
   const [mode, setMode] = useState(selectedMode || 'TASK');
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    dueDateTime: '',
+    startDateTime: '',
+    endDateTime: '',
+    reminderMinutesBefore: ''
+  });
+
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (mode === 'TASK') {
       setFormData({
-        title: initialTask?.title || '',
-        description: initialTask?.description || '',
-        dueDateTime: initialTask?.dueDateTime?.slice(0, 16) || '',
-        reminderMinutesBefore: initialTask?.reminderMinutesBefore || '',
+        title: initialTask?.title ?? '',
+        description: initialTask?.description ?? '',
+        dueDateTime: initialTask?.dueDateTime?.slice(0, 16) ?? '',
+        startDateTime: '',
+        endDateTime: '',
+        reminderMinutesBefore: initialTask?.reminderMinutesBefore?.toString() ?? ''
       });
     } else {
-      if (initialEvent) {
-        setFormData({
-          title: initialEvent.title || '',
-          description: initialEvent.description || '',
-          startDateTime: initialEvent.startDateTime?.slice(0, 16) || '',
-          endDateTime: initialEvent.endDateTime?.slice(0, 16) || '',
-          reminderMinutesBefore: initialEvent.reminderMinutesBefore || '',
-        });
-      } else if (initialRange) {
-        setFormData({
-          title: '',
-          description: '',
-          startDateTime: initialRange.startDateTime?.slice(0, 16) || '',
-          endDateTime: initialRange.endDateTime?.slice(0, 16) || '',
-          reminderMinutesBefore: '',
-        });
-      } else {
-        setFormData({
-          title: '',
-          description: '',
-          startDateTime: '',
-          endDateTime: '',
-          reminderMinutesBefore: '',
-        });
-      }
+      const base = {
+        title: '',
+        description: '',
+        startDateTime: '',
+        endDateTime: '',
+        reminderMinutesBefore: ''
+      };
+
+      const source = initialEvent || initialRange || base;
+
+      setFormData({
+        title: source.title ?? '',
+        description: source.description ?? '',
+        startDateTime: source.startDateTime?.slice(0, 16) ?? '',
+        endDateTime: source.endDateTime?.slice(0, 16) ?? '',
+        dueDateTime: '',
+        reminderMinutesBefore: source.reminderMinutesBefore?.toString() ?? ''
+      });
     }
+    setErrors({});
   }, [mode, initialTask, initialEvent, initialRange, isOpen]);
 
   useEffect(() => {
@@ -56,22 +61,45 @@ const GenericFormModal = ({
       setMode(selectedMode.toUpperCase());
     }
   }, [selectedMode, isOpen]);
-  
-  const handleChange = e => {
+
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value === '' ? null
-        : name === 'reminderMinutesBefore' ? parseInt(value, 10)
+      [name]: name === 'reminderMinutesBefore' && value !== "" 
+        ? parseInt(value, 10)
         : value
     }));
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.title.trim()) return;
-    console.log("Payload inviato:", formData);
-    onSubmit(formData, mode); // Manda anche il tipo
+
+    const newErrors = {};
+    if (!formData.title.trim()) {
+      newErrors.title = "Il titolo è obbligatorio";
+    }
+
+    if (mode === 'TASK' && !formData.dueDateTime) {
+      newErrors.dueDateTime = "La data di scadenza è obbligatoria";
+    }
+
+    if (mode === 'EVENT') {
+      if (!formData.startDateTime) {
+        newErrors.startDateTime = "Data e ora di inizio obbligatorie";
+      }
+      if (!formData.endDateTime) {
+        newErrors.endDateTime = "Data e ora di fine obbligatorie";
+      }
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setErrors({});
+    onSubmit(formData, mode);
     onClose();
   };
 
@@ -119,14 +147,14 @@ const GenericFormModal = ({
               <label className="label">Titolo</label>
               <div className="control">
                 <input
-                  className="input"
+                  className={`input ${errors.title ? 'is-danger' : ''}`}
                   name="title"
                   value={formData.title}
                   onChange={handleChange}
                   placeholder={mode === 'TASK' ? 'Titolo della task' : 'Titolo dell\'evento'}
-                  required
                 />
               </div>
+              {errors.title && <p className="help is-danger">{errors.title}</p>}
             </div>
 
             <div className="field">
@@ -148,7 +176,7 @@ const GenericFormModal = ({
                   <label className="label">Data di scadenza</label>
                   <div className="control">
                     <input
-                      className="input"
+                      className={`input ${errors.dueDateTime ? 'is-danger' : ''}`}
                       type="datetime-local"
                       name="dueDateTime"
                       value={formData.dueDateTime}
@@ -156,6 +184,7 @@ const GenericFormModal = ({
                     />
                   </div>
                 </div>
+
                 <div className="field">
                   <label className="label">Promemoria (prima della scadenza)</label>
                   <div className="control">
@@ -182,28 +211,30 @@ const GenericFormModal = ({
                   <label className="label">Start</label>
                   <div className="control">
                     <input
-                      className="input"
+                      className={`input ${errors.startDateTime ? 'is-danger' : ''}`}
                       type="datetime-local"
                       name="startDateTime"
                       value={formData.startDateTime}
                       onChange={handleChange}
-                      required
                     />
                   </div>
+                  {errors.startDateTime && <p className="help is-danger">{errors.startDateTime}</p>}
                 </div>
+
                 <div className="field">
                   <label className="label">End</label>
                   <div className="control">
                     <input
-                      className="input"
+                      className={`input ${errors.endDateTime ? 'is-danger' : ''}`}
                       type="datetime-local"
                       name="endDateTime"
                       value={formData.endDateTime}
                       onChange={handleChange}
-                      required
                     />
                   </div>
+                  {errors.endDateTime && <p className="help is-danger">{errors.endDateTime}</p>}
                 </div>
+
                 <div className="field">
                   <label className="label">Promemoria (prima dell’inizio)</label>
                   <div className="control">

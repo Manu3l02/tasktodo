@@ -44,7 +44,7 @@ const Dashboard = () => {
     setInitialRange(null);
   };
 
-  const handleSubmit = (formData, mode) => {
+  const handleSubmit = async (formData, mode) => {
     const payload = mode === 'TASK'
       ? {
           title: formData.title,
@@ -64,16 +64,26 @@ const Dashboard = () => {
     const method = editingItem && editingItem.id ? api.put : api.post;
     const url = editingItem && editingItem.id ? `${endpoint}/${editingItem.id}` : endpoint;
 
-    method(url, payload)
-      .then(() => api.get('/calendar/items'))
-      .then(res => {
-        setItems(res.data);
-        setTasks(res.data.filter(i => i.type === 'TASK'));
-        setEvents(res.data.filter(i => i.type === 'EVENT'));
-        toast.success('Salvato!');
-        closeModal();
-      })
-      .catch(console.error);
+    try {
+      await method(url, payload);
+      const res = await api.get('/calendar/items');
+      setItems(res.data);
+      setTasks(res.data.filter(i => i.type === 'TASK'));
+      setEvents(res.data.filter(i => i.type === 'EVENT'));
+      toast.success('Salvato!');
+      closeModal();
+    } catch (err) {
+      // 🔴 Qui catturiamo errori di validazione
+      if (err.response?.status === 400 && err.response.data?.errors) {
+        const errors = err.response.data.errors;
+        const errorMessages = Object.values(errors).join('\n');
+        toast.error(errorMessages);
+        console.error("Errori di validazione:", errors);
+      } else {
+        toast.error('Errore sconosciuto');
+        console.error(err);
+      }
+    }
   };
 
   const handleDelete = (mode, id) => {
